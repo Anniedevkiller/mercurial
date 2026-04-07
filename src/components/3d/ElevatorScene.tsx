@@ -53,17 +53,17 @@ export default function ElevatorScene({ started }: { started?: boolean }) {
       {/* Elevator Interior Walls (Left & Right inside) */}
       <mesh position={[-2, 1.5, 1]} rotation={[0, Math.PI / 2, 0]}>
          <planeGeometry args={[4, 5]} />
-         <meshStandardMaterial color="#0A1128" metalness={0.8} roughness={0.2} />
+         <meshStandardMaterial color="#F5F5F5" metalness={0.4} roughness={0.3} />
       </mesh>
       <mesh position={[2, 1.5, 1]} rotation={[0, -Math.PI / 2, 0]}>
          <planeGeometry args={[4, 5]} />
-         <meshStandardMaterial color="#0A1128" metalness={0.8} roughness={0.2} />
+         <meshStandardMaterial color="#F5F5F5" metalness={0.4} roughness={0.3} />
       </mesh>
 
       {/* Skyline glass view (Behind user initially) */}
       <mesh position={[0, 1.5, 3]} rotation={[0, Math.PI, 0]}>
          <planeGeometry args={[4, 5]} />
-         <meshStandardMaterial color="#050505" opacity={0.6} transparent />
+         <meshStandardMaterial color="#ffffff" opacity={0.4} transparent />
       </mesh>
       {/* City lights behind glass */}
       <group position={[0, 1.5, 4]}>
@@ -77,7 +77,7 @@ export default function ElevatorScene({ started }: { started?: boolean }) {
             ]}
           >
             <sphereGeometry args={[0.02]} />
-            <meshStandardMaterial color="#C5A059" emissive="#C5A059" emissiveIntensity={2} />
+            <meshStandardMaterial color="#FFD700" emissive="#FFD700" emissiveIntensity={1.5} />
           </mesh>
         ))}
       </group>
@@ -85,18 +85,18 @@ export default function ElevatorScene({ started }: { started?: boolean }) {
       {/* Doors (In front of user, parting to reveal gallery) */}
       <mesh ref={leftDoorRef} position={[-0.75, 1.5, -0.5]}>
         <boxGeometry args={[1.5, 3.5, 0.1]} />
-        <meshStandardMaterial color="#D4AF37" metalness={0.9} roughness={0.1} />
+        <meshStandardMaterial color="#FFD700" metalness={0.9} roughness={0.1} />
       </mesh>
       
       <mesh ref={rightDoorRef} position={[0.75, 1.5, -0.5]}>
         <boxGeometry args={[1.5, 3.5, 0.1]} />
-        <meshStandardMaterial color="#D4AF37" metalness={0.9} roughness={0.1} />
+        <meshStandardMaterial color="#FFD700" metalness={0.9} roughness={0.1} />
       </mesh>
 
       {/* Floor */}
       <mesh position={[0, -0.25, 1]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[4, 4]} />
-        <meshStandardMaterial color="#050505" />
+        <meshStandardMaterial color="#F5F5F5" />
       </mesh>
     </group>
   );

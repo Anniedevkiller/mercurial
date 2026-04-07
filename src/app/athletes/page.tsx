@@ -49,23 +49,23 @@ function PortraitCard({ athlete }: { athlete: typeof athletes[0] }) {
         rotateY,
         transformStyle: "preserve-3d",
       }}
-      className="relative w-full max-w-sm aspect-[3/4] mx-auto rounded-md cursor-pointer border-2 border-transparent hover:border-gold/50 transition-colors duration-500 overflow-hidden group"
+      className="relative w-full max-w-sm aspect-[3/4] mx-auto rounded-md cursor-pointer border-2 border-transparent hover:border-light-yellow/50 transition-colors duration-500 overflow-hidden group shadow-xl shadow-dark-blue/5"
     >
       <div 
         className="absolute inset-0 bg-cover bg-center transition-all duration-700 grayscale-[100%] group-hover:grayscale-[20%] group-hover:scale-105"
         style={{ backgroundImage: `url(${athlete.img})` }}
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/40 to-transparent opacity-80" />
+      <div className="absolute inset-0 bg-gradient-to-t from-white/95 via-white/60 to-transparent opacity-90" />
       
       <div 
         className="absolute bottom-0 left-0 p-8 w-full transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500"
         style={{ transform: "translateZ(50px)" }}
       >
-        <h3 className="font-playfair text-2xl text-gold mb-1">{athlete.name}</h3>
-        <p className="font-bebas text-xl text-ivory tracking-wider mb-3 opacity-90">{athlete.sport}</p>
+        <h3 className="font-playfair text-2xl text-dark-blue mb-1">{athlete.name}</h3>
+        <p className="font-bebas text-xl text-dark-blue/80 tracking-wider mb-3">{athlete.sport}</p>
         <div className="space-y-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-          <p className="font-inter text-sm text-ivory/80"><span className="text-gold/80 uppercase text-xs tracking-widest">Stats:</span> {athlete.stats}</p>
-          <p className="font-inter text-sm text-ivory/80"><span className="text-gold/80 uppercase text-xs tracking-widest">Rep:</span> {athlete.rep}</p>
+          <p className="font-inter text-sm text-dark-blue/80"><span className="text-light-yellow uppercase text-xs tracking-widest font-semibold">Stats:</span> {athlete.stats}</p>
+          <p className="font-inter text-sm text-dark-blue/80"><span className="text-light-yellow uppercase text-xs tracking-widest font-semibold">Rep:</span> {athlete.rep}</p>
         </div>
       </div>
     </motion.div>
@@ -74,10 +74,10 @@ function PortraitCard({ athlete }: { athlete: typeof athletes[0] }) {
 
 export default function AthletesPage() {
   return (
-    <main className="min-h-screen bg-dark text-foreground flex flex-col items-center justify-start pt-32 pb-20 px-8">
-      <div className="text-center mb-16">
-        <h1 className="font-playfair text-6xl text-gold mb-6 uppercase tracking-widest">Our Roster</h1>
-        <p className="font-inter text-ivory/70 max-w-2xl mx-auto tracking-wide text-lg">
+    <main className="min-h-screen bg-background text-foreground flex flex-col items-center justify-start pt-32 pb-20 px-8">
+      <div className="text-center mb-16 px-4">
+        <h1 className="font-playfair text-5xl md:text-6xl text-dark-blue mb-6 uppercase tracking-widest">Our Roster</h1>
+        <p className="font-inter text-dark-blue/70 max-w-2xl mx-auto tracking-wide text-lg">
           Representing the pinnacle of athletic achievement. 
           A gallery of movement, power, and prestige.
         </p>

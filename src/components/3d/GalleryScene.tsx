@@ -1,98 +1,80 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import * as THREE from "three";
-import { Sparkles, Text, Float, Html } from "@react-three/drei";
+import { Sparkles, OrbitControls, Float } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
 
 export default function GalleryScene() {
-  const galleryRef = useRef<THREE.Group>(null);
+  const globeRef = useRef<THREE.Group>(null);
+  
+  // Generate random coordinate nodes for the globe
+  const nodes = useMemo(() => {
+    return Array.from({ length: 40 }).map(() => {
+      const phi = Math.acos(-1 + (2 * Math.random()));
+      const theta = Math.sqrt(40 * Math.PI) * phi;
+      const radius = 1.6;
+      return [
+        radius * Math.cos(theta) * Math.sin(phi),
+        radius * Math.sin(theta) * Math.sin(phi),
+        radius * Math.cos(phi)
+      ];
+    });
+  }, []);
+
+  useFrame((state) => {
+    if (globeRef.current) {
+      globeRef.current.rotation.y += 0.002;
+    }
+  });
 
   return (
-    <group ref={galleryRef} position={[0, -0.5, -5]}>
-      {/* Warm Spotlight Lighting */}
-      <spotLight position={[0, 5, 0]} angle={0.8} penumbra={1} intensity={20} color="#FCEBCC" castShadow />
-      <ambientLight intensity={0.2} color="#0A1128" />
+    <group position={[0, -0.5, -4]}>
+      <OrbitControls 
+        enableZoom={false} 
+        enablePan={false} 
+        maxPolarAngle={Math.PI / 1.5}
+        minPolarAngle={Math.PI / 3}
+        autoRotate={false}
+      />
+      
+      <ambientLight intensity={1.5} color="#ffffff" />
+      <directionalLight position={[5, 5, 5]} intensity={2} color="#ffffff" />
+      <pointLight position={[-5, -5, -5]} intensity={1} color="#FFD700" />
 
       {/* Floating Particles */}
-      <Sparkles count={200} scale={12} size={2} speed={0.4} opacity={0.3} color="#D4AF37" />
+      <Sparkles count={150} scale={10} size={1.5} speed={0.3} opacity={0.5} color="#0B192C" />
 
-      {/* Background gallery walls */}
-      <mesh position={[0, 3, -4]} receiveShadow>
-        <planeGeometry args={[20, 10]} />
-        <meshStandardMaterial color="#0b0f1a" roughness={0.8} />
+      {/* Background Environment Base */}
+      <mesh position={[0, -2, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <planeGeometry args={[50, 50]} />
+        <meshStandardMaterial color="#F5F5F5" roughness={1} />
       </mesh>
-      
-      {/* Floor */}
-      <mesh position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <planeGeometry args={[20, 20]} />
-        <meshStandardMaterial color="#030303" roughness={0.1} metalness={0.5} />
-      </mesh>
-      
-      {/* Rhodes Piano Placeholder (Abstract representation) */}
-      <group position={[0, 0.8, -1]} castShadow>
-        {/* Main Body */}
-        <mesh position={[0, 0, 0]}>
-          <boxGeometry args={[2.2, 0.4, 0.8]} />
-          <meshStandardMaterial color="#1a1a1a" roughness={0.2} metalness={0.6} />
-        </mesh>
-        {/* Keyboard area */}
-        <mesh position={[0, 0.1, 0.2]}>
-          <boxGeometry args={[2, 0.1, 0.3]} />
-          <meshStandardMaterial color="#e0e0e0" />
-        </mesh>
-        {/* Legs */}
-        <mesh position={[-0.9, -0.5, 0]}>
-           <cylinderGeometry args={[0.05, 0.02, 1]} />
-           <meshStandardMaterial color="#D4AF37" metalness={0.8} />
-        </mesh>
-        <mesh position={[0.9, -0.5, 0]}>
-           <cylinderGeometry args={[0.05, 0.02, 1]} />
-           <meshStandardMaterial color="#D4AF37" metalness={0.8} />
-        </mesh>
 
-        {/* Chrome Microphone abstract */}
-        <mesh position={[0, 0.5, 0]}>
-           <cylinderGeometry args={[0.02, 0.02, 0.6]} />
-           <meshStandardMaterial color="#cccccc" metalness={1} roughness={0} />
-        </mesh>
-        <mesh position={[0, 0.85, 0]}>
-           <sphereGeometry args={[0.08]} />
-           <meshStandardMaterial color="#aaaaaa" metalness={0.9} roughness={0.2} wireframe />
-        </mesh>
-      </group>
-      
-      {/* Interactive Candle Installation */}
-      <group 
-        position={[2.5, 0.4, -2]} 
-        onClick={() => window.open("https://instagram.com", "_blank")} 
-        onPointerOver={(e) => { e.stopPropagation(); document.body.style.cursor = 'pointer'; }}
-        onPointerOut={(e) => { e.stopPropagation(); document.body.style.cursor = 'default'; }}
-      >
-        {/* Plinth */}
-        <mesh position={[0, -0.2, 0]}>
-           <boxGeometry args={[0.6, 0.4, 0.6]} />
-           <meshStandardMaterial color="#0A1128" />
-        </mesh>
-        {/* Candle */}
-        <mesh position={[0, 0.1, 0]}>
-          <cylinderGeometry args={[0.06, 0.06, 0.2]} />
-          <meshStandardMaterial color="#FFFDE7" roughness={0.8} />
-        </mesh>
-        {/* Flame */}
-        <Float speed={5} rotationIntensity={0.2}>
-          <mesh position={[0, 0.25, 0]}>
-            <coneGeometry args={[0.03, 0.1]} />
-            <meshStandardMaterial color="#FF9800" emissive="#FF9800" emissiveIntensity={4} />
+      {/* Main Interactive Globe */}
+      <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.5}>
+        <group ref={globeRef} position={[0, 1.5, 0]}>
+          {/* Inner Solid Globe */}
+          <mesh>
+            <sphereGeometry args={[1.5, 64, 64]} />
+            <meshStandardMaterial color="#0B192C" roughness={0.7} metalness={0.2} />
           </mesh>
-        </Float>
-        
-        <Html position={[0, 0.5, 0]} center>
-          <div className="bg-dark/80 text-ivory text-xs px-3 py-1.5 rounded border border-gold/40 shadow-lg whitespace-nowrap cursor-pointer transition-transform hover:scale-105 pointer-events-auto">
-            <span className="font-playfair text-gold block text-sm">"Ma Lueur"</span>
-            <span className="font-inter tracking-wide opacity-80 text-[10px]">Mellow Music by Kaowther</span>
-          </div>
-        </Html>
-      </group>
+          
+          {/* Outer Wireframe Globe */}
+          <mesh scale={1.01}>
+            <sphereGeometry args={[1.5, 32, 32]} />
+            <meshStandardMaterial color="#FFD700" wireframe transparent opacity={0.3} />
+          </mesh>
+
+          {/* Node Points representing Athletes/Locations */}
+          {nodes.map((pos, idx) => (
+            <mesh key={idx} position={[pos[0], pos[1], pos[2]]}>
+              <sphereGeometry args={[0.04, 16, 16]} />
+              <meshBasicMaterial color="#FFD700" />
+            </mesh>
+          ))}
+        </group>
+      </Float>
     </group>
   );
 }
