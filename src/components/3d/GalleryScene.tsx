@@ -1,80 +1,138 @@
 "use client";
 
-import { useRef, useMemo } from "react";
+import { useRef, useState } from "react";
 import * as THREE from "three";
-import { Sparkles, OrbitControls, Float } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
+import { Sparkles, Html, Image, useCursor, SpotLight } from "@react-three/drei";
+import { useFrame, useThree } from "@react-three/fiber";
 
-export default function GalleryScene() {
-  const globeRef = useRef<THREE.Group>(null);
+const athletes = [
+  { id: 1, name: "Marcus 'The Flash' Thorne", sport: "Basketball", stats: "28.5 PPG / 5 MVP", rep: "Exclusive Brand", img: "/athletes/athlete_1.jpg" },
+  { id: 2, name: "Elena Silva", sport: "Tennis", stats: "12 Grand Slams", rep: "Global Image", img: "/athletes/athlete_2.jpg" },
+  { id: 3, name: "Julian Rossi", sport: "Formula 1", stats: "4x World Champion", rep: "Team Negotiations", img: "/athletes/athlete_3.jpg" },
+  { id: 4, name: "Sarah Jenkins", sport: "Track & Field", stats: "Olympic Gold Medalist", rep: "Commercial Strategy", img: "/athletes/athlete_4.jpg" },
+];
+
+function PortraitFrame({ athlete, position }: { athlete: typeof athletes[0], position: [number, number, number] }) {
+  const groupRef = useRef<THREE.Group>(null);
+  const [hovered, setHovered] = useState(false);
+  useCursor(hovered, "pointer", "auto");
   
-  // Generate random coordinate nodes for the globe
-  const nodes = useMemo(() => {
-    return Array.from({ length: 40 }).map(() => {
-      const phi = Math.acos(-1 + (2 * Math.random()));
-      const theta = Math.sqrt(40 * Math.PI) * phi;
-      const radius = 1.6;
-      return [
-        radius * Math.cos(theta) * Math.sin(phi),
-        radius * Math.sin(theta) * Math.sin(phi),
-        radius * Math.cos(phi)
-      ];
-    });
-  }, []);
+  const { mouse } = useThree();
 
-  useFrame((state) => {
-    if (globeRef.current) {
-      globeRef.current.rotation.y += 0.002;
+  useFrame(() => {
+    if (groupRef.current) {
+      if (hovered) {
+        // Tilt towards mouse
+        THREE.MathUtils.lerp(groupRef.current.rotation.y, mouse.x * 0.5, 0.1);
+        THREE.MathUtils.lerp(groupRef.current.rotation.x, -mouse.y * 0.5, 0.1);
+        THREE.MathUtils.lerp(groupRef.current.position.z, 0.5, 0.1);
+      } else {
+        // Reset
+        THREE.MathUtils.lerp(groupRef.current.rotation.y, 0, 0.1);
+        THREE.MathUtils.lerp(groupRef.current.rotation.x, 0, 0.1);
+        THREE.MathUtils.lerp(groupRef.current.position.z, 0, 0.1);
+      }
     }
   });
 
   return (
-    <group position={[0, -0.5, -4]}>
-      <OrbitControls 
-        enableZoom={false} 
-        enablePan={false} 
-        maxPolarAngle={Math.PI / 1.5}
-        minPolarAngle={Math.PI / 3}
-        autoRotate={false}
-      />
+    <group ref={groupRef} position={position} onPointerOver={() => setHovered(true)} onPointerOut={() => setHovered(false)}>
+      {/* Gold Frame Outer */}
+      <mesh position={[0, 0, -0.05]} castShadow>
+        <boxGeometry args={[4.2, 5.2, 0.2]} />
+        <meshStandardMaterial color="#C19A6B" metalness={0.8} roughness={0.2} />
+      </mesh>
       
-      <ambientLight intensity={1.5} color="#ffffff" />
-      <directionalLight position={[5, 5, 5]} intensity={2} color="#ffffff" />
-      <pointLight position={[-5, -5, -5]} intensity={1} color="#FFD700" />
-
-      {/* Floating Particles */}
-      <Sparkles count={150} scale={10} size={1.5} speed={0.3} opacity={0.5} color="#0B192C" />
-
-      {/* Background Environment Base */}
-      <mesh position={[0, -2, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <planeGeometry args={[50, 50]} />
-        <meshStandardMaterial color="#F5F5F5" roughness={1} />
+      {/* Gold Frame Inner Mat (Cream) */}
+      <mesh position={[0, 0, 0.05]}>
+        <planeGeometry args={[3.8, 4.8]} />
+        <meshStandardMaterial color="#FDFBF7" roughness={0.9} />
       </mesh>
 
-      {/* Main Interactive Globe */}
-      <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.5}>
-        <group ref={globeRef} position={[0, 1.5, 0]}>
-          {/* Inner Solid Globe */}
-          <mesh>
-            <sphereGeometry args={[1.5, 64, 64]} />
-            <meshStandardMaterial color="#0B192C" roughness={0.7} metalness={0.2} />
-          </mesh>
-          
-          {/* Outer Wireframe Globe */}
-          <mesh scale={1.01}>
-            <sphereGeometry args={[1.5, 32, 32]} />
-            <meshStandardMaterial color="#FFD700" wireframe transparent opacity={0.3} />
-          </mesh>
+      {/* Portrait Image */}
+      {/* eslint-disable-next-line jsx-a11y/alt-text */}
+      <Image 
+        url={athlete.img} 
+        position={[0, 0, 0.06]} 
+        scale={[3.4, 4.4]} 
+        zoom={hovered ? 1.1 : 1}
+        grayscale={hovered ? 0.2 : 1} 
+        transparent
+      />
 
-          {/* Node Points representing Athletes/Locations */}
-          {nodes.map((pos, idx) => (
-            <mesh key={idx} position={[pos[0], pos[1], pos[2]]}>
-              <sphereGeometry args={[0.04, 16, 16]} />
-              <meshBasicMaterial color="#FFD700" />
-            </mesh>
-          ))}
-        </group>
-      </Float>
+      {/* Frame Glass */}
+      <mesh position={[0, 0, 0.1]} castShadow>
+        <planeGeometry args={[4, 5]} />
+        <meshPhysicalMaterial color="#ffffff" metalness={0.1} roughness={0.1} transmission={0.9} thickness={0.5} transparent opacity={0.3} />
+      </mesh>
+
+      {hovered && (
+        <Html position={[0, -3.2, 0]} center zIndexRange={[100, 0]}>
+          <div className="bg-dark-blue/95 border border-light-yellow border-t-4 border-t-light-yellow px-8 py-6 w-80 shadow-[0_20px_50px_rgba(0,0,0,0.8)] backdrop-blur-xl animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <h3 className="font-playfair text-2xl text-cream mb-2 tracking-wide uppercase">{athlete.name}</h3>
+            <p className="font-bebas text-xl text-light-yellow tracking-widest mb-4 opacity-90">{athlete.sport}</p>
+            <div className="w-full h-px bg-gradient-to-r from-transparent via-light-yellow/50 to-transparent mb-4" />
+            <div className="space-y-3 font-inter text-sm">
+              <p className="text-cream/90 flex justify-between">
+                <span className="text-light-yellow/70 uppercase text-xs tracking-widest">Achv Target</span> 
+                <span className="font-medium">{athlete.stats}</span>
+              </p>
+              <p className="text-cream/90 flex justify-between">
+                <span className="text-light-yellow/70 uppercase text-xs tracking-widest">Focus Level</span> 
+                <span className="font-medium text-right">{athlete.rep}</span>
+              </p>
+            </div>
+          </div>
+        </Html>
+      )}
+      
+      {/* Individual Spotlight for the frame */}
+      <SpotLight position={[0, 5, 4]} angle={0.5} penumbra={0.8} intensity={hovered ? 4 : 2} color={hovered ? "#ffffff" : "#C19A6B"} distance={12} castShadow />
+    </group>
+  );
+}
+
+export default function GalleryScene() {
+  
+  return (
+    <group position={[0, -0.5, 0]}>
+      <ambientLight intensity={0.4} color="#FDFBF7" />
+      <directionalLight position={[0, 10, 5]} intensity={0.8} color="#C19A6B" castShadow />
+
+      {/* Floating dust particles */}
+      <Sparkles count={400} scale={30} size={2} speed={0.2} opacity={0.3} color="#C19A6B" />
+
+      {/* Museum Room Walls - Deep Royal Blue / Dark Navy */}
+      <mesh position={[0, 5, -5]} receiveShadow>
+        <planeGeometry args={[60, 20]} />
+        <meshStandardMaterial color="#020408" roughness={0.8} />
+      </mesh>
+
+      {/* Gallery Floor - Cream/Black with Reflections */}
+      <mesh position={[0, -3.5, 5]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <planeGeometry args={[60, 30]} />
+        <meshPhysicalMaterial 
+          color="#040A18" 
+          roughness={0.1} 
+          metalness={0.8}
+          clearcoat={1}
+          clearcoatRoughness={0.1}
+        />
+      </mesh>
+
+      <group position={[0, 1, -2]}>
+        {athletes.map((athlete, idx) => {
+          // Spread along X
+          const xPos = (idx - 1.5) * 5.5; 
+          const zPos = Math.abs(idx - 1.5) * 0.5; // Slight arc backward at edges
+          const yRot = (idx - 1.5) * -0.05; // very slight rotation inward
+          return (
+            <group key={athlete.id} position={[xPos, 0, -zPos]} rotation={[0, yRot, 0]}>
+              <PortraitFrame athlete={athlete} position={[0, 0, 0]} />
+            </group>
+          );
+        })}
+      </group>
     </group>
   );
 }
