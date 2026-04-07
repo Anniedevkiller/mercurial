@@ -1,87 +1,19 @@
 "use client";
 
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Suspense, useState, useRef, useEffect } from "react";
-import ElevatorScene from "./ElevatorScene";
-import { Environment, Preload, Sparkles, Cloud, Clouds } from "@react-three/drei";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import * as THREE from "three";
 import { ArrowRight } from "lucide-react";
-
-function CinematicEffects({ started }: { started: boolean }) {
-  // Inside CinematicEffects
-  const spotlightRef = useRef<THREE.SpotLight>(null);
-  const targetRef = useRef<THREE.Object3D>(new THREE.Object3D());
-  const { scene } = useThree();
-
-  useEffect(() => {
-    const target = targetRef.current;
-    if (scene && !scene.children.includes(target)) {
-      scene.add(target);
-    }
-    return () => {
-      if (scene) scene.remove(target);
-    }
-  }, [scene]);
-
-  useFrame((state) => {
-    if (!started) {
-      // Slight camera zoom and float
-      const targetZ = 4.0;
-      state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, targetZ, 0.005);
-      
-      // Moving spotlight sweep
-      if (spotlightRef.current) {
-        spotlightRef.current.position.x = Math.sin(state.clock.elapsedTime * 0.5) * 4;
-        targetRef.current.position.set(Math.sin(state.clock.elapsedTime * 0.3) * 2, 0, 0);
-        spotlightRef.current.target = targetRef.current;
-      }
-    }
-  });
-
-  return (
-    <>
-      <spotLight ref={spotlightRef} position={[0, 4, 3]} intensity={4} angle={0.8} penumbra={1} color="#C19A6B" />
-      {!started && (
-        <Clouds material={THREE.MeshBasicMaterial}>
-          <Cloud segments={20} bounds={[10, 2, 2]} volume={10} color="#C19A6B" opacity={0.15} position={[0, -1, 0]} speed={0.2} />
-        </Clouds>
-      )}
-    </>
-  );
-}
+import { tourStore, useTourState } from "@/lib/store";
 
 export default function HomeScene() {
-  const [started, setStarted] = useState(false);
+  const started = useTourState();
 
   const handleEnter = () => {
-    setStarted(true);
+    tourStore.setStarted(true);
   };
 
   return (
-    <div className="w-screen h-screen xl:w-full xl:h-full absolute inset-0 z-0 bg-background overflow-hidden flex items-center justify-center">
-      
-      {/* 3D Background & Elevator */}
-      <Canvas
-        camera={{ position: [0, 1.5, 6], fov: 45 }}
-        gl={{ antialias: true, alpha: false }}
-        dpr={[1, 2]}
-        className="absolute inset-0"
-      >
-        <Suspense fallback={null}>
-          <ElevatorScene started={started} />
-          {/* Subtle moving particles in the lobby */}
-          {!started && <Sparkles count={300} scale={12} size={1.5} speed={0.4} opacity={0.6} color="#C19A6B" />}
-          
-          <CinematicEffects started={started} />
-
-          <Environment preset="city" />
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[2, 5, 2]} intensity={2} color="#FDFBF7" />
-          <Preload all />
-        </Suspense>
-      </Canvas>
-
+    <div className="w-screen h-screen xl:w-full xl:h-full absolute inset-0 z-10 overflow-hidden flex items-center justify-center pointer-events-none">
       {/* Hero Content Overlay */}
       <AnimatePresence>
         {!started && (
@@ -92,7 +24,6 @@ export default function HomeScene() {
             className="relative z-10 flex flex-col items-center justify-center text-center px-4 w-full h-full pointer-events-none"
           >
             {/* Cinematic Gradient Overlays */}
-            <div className="absolute inset-0 bg-gradient-to-b from-dark-blue/80 via-transparent to-black/95 pointer-events-none" />
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-light-yellow/10 via-transparent to-transparent pointer-events-none mix-blend-screen" />
 
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-6 mt-10 w-full">
@@ -130,7 +61,7 @@ export default function HomeScene() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 1.5 }}
               onClick={handleEnter}
-              className="absolute bottom-24 pointer-events-auto px-10 py-5 border border-light-yellow/40 text-light-yellow font-inter uppercase tracking-[0.3em] text-sm sm:text-base hover:border-light-yellow transition-all duration-700 backdrop-blur-md bg-black/20 group animate-pulse-slow overflow-hidden rounded-sm flex items-center gap-4"
+              className="absolute bottom-24 pointer-events-auto px-10 py-5 border border-light-yellow/40 text-light-yellow font-inter uppercase tracking-[0.3em] text-sm sm:text-base hover:border-light-yellow transition-all duration-700 backdrop-blur-md bg-black/20 group animate-[pulse-slow_4s_infinite_ease-in-out] overflow-hidden rounded-sm flex items-center gap-4"
             >
               <div className="absolute inset-0 bg-light-yellow/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl pointer-events-none" />
               <span className="relative z-10 transition-transform group-hover:-translate-x-2 duration-500">Enter the Gallery</span>

@@ -3,29 +3,23 @@
 import { useEffect, useRef, useState } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 
+import { useTourState } from "@/lib/store";
+
 export function AudioPlayer() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const started = useTourState();
 
   useEffect(() => {
-    // Attempt autoplay, catch if blocked
     const audio = audioRef.current;
-    if (audio) {
+    if (audio && started) {
       audio.volume = 0.3;
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            setIsPlaying(true);
-          })
-          .catch((error) => {
-            console.log("Autoplay prevented:", error);
-            setIsPlaying(false);
-          });
-      }
+      audio.play().then(() => setIsPlaying(true)).catch((e) => {
+        console.log("Autoplay prevented:", e);
+      });
     }
-  }, []);
+  }, [started]);
 
   const toggleMute = () => {
     if (audioRef.current) {

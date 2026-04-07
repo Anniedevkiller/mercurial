@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Playfair_Display, Inter, Bebas_Neue } from "next/font/google";
 import "./globals.css";
 import { Navigation } from "@/components/ui/Navigation";
+import GlobalCanvas from "@/components/3d/GlobalCanvas";
+import AutoTourController from "@/components/AutoTourController";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -37,6 +39,8 @@ export default function RootLayout({
       className={`${playfair.variable} ${inter.variable} ${bebas.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-inter bg-background text-foreground overflow-x-hidden">
+        <GlobalCanvas />
+        <AutoTourController />
         <Navigation />
         {children}
       </body>
