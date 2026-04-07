@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { tourStore, useTourState } from "@/lib/store";
@@ -14,6 +13,10 @@ export default function HomeScene() {
 
   return (
     <div className="w-screen h-screen xl:w-full xl:h-full absolute inset-0 z-10 overflow-hidden flex items-center justify-center pointer-events-none">
+      {/* Deep Blue Shifting Background Overlay */}
+      <div className="absolute inset-0 bg-[#020408] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(10,20,40,1)_0%,_rgba(2,4,8,1)_100%)] opacity-80 animate-pulse pointer-events-none" />
+      
       {/* Hero Content Overlay */}
       <AnimatePresence>
         {!started && (

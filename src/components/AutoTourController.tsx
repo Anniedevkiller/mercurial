@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useTourState } from "@/lib/store";
 
-const TOUR_ROUTES = ["/athletes", "/services", "/about"];
+const TOUR_ROUTES = ["/athletes", "/services", "/about", "/"];
 const TOUR_INTERVAL = 8000;
 
 export default function AutoTourController() {

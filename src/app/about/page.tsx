@@ -10,14 +10,12 @@ export default function AboutPage() {
       <div className="absolute bottom-0 -left-1/4 w-[600px] h-[600px] bg-light-yellow/10 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="max-w-4xl w-full z-10 text-center mb-20 px-4 pointer-events-auto mt-[40vh] md:mt-[30vh]">
-        <h1 className="font-playfair text-3xl md:text-5xl text-dark-blue mb-8 tracking-widest leading-relax italic">
-          &quot;Mercurial Sports Imperial is a premium sports representation agency where champions are curated like masterpieces.&quot;
+        <h1 className="font-playfair text-3xl md:text-5xl text-dark-blue mb-8 tracking-[0.2em] leading-relaxed italic uppercase">
+          &quot;Mercurial Sports Imperial is a luxury athlete representation house where talent is curated as legacy.&quot;
         </h1>
-        <p className="font-inter text-dark-blue/80 text-xl max-w-2xl mx-auto leading-relaxed border-t border-dark-blue/20 pt-6">
-          <strong className="block text-dark-blue mb-2 font-bebas tracking-[0.2em] text-2xl">Mission</strong>
-          To redefine the intersection of elite athletics and cultural influence, establishing lifelong legacies for the exceptional few.<br/><br/>
-          <strong className="block text-dark-blue mb-2 font-bebas tracking-[0.2em] text-2xl">Vision</strong>
-          To serve as the global pinnacle of bespoke career representation.
+        <div className="w-24 h-1 bg-light-yellow mx-auto mb-12" />
+        <p className="font-inter text-dark-blue/80 text-xl max-w-3xl mx-auto leading-loose tracking-widest text-center uppercase">
+          We merge elite sports management with artistic expression, global exposure, and cultural storytelling.
         </p>
       </div>
 

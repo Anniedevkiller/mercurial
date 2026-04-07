@@ -22,7 +22,7 @@ function CameraRig({ started }: { started: boolean }) {
   const pathname = usePathname();
   const currentRoom = ROOMS[pathname] || ROOMS["/"];
 
-  useFrame((state, delta) => {
+  useFrame((state) => {
     // If not started, useCinematic effects (slow drifting)
     if (!started && pathname === "/") {
       const targetZ = 4.0;
@@ -47,6 +47,55 @@ function CameraRig({ started }: { started: boolean }) {
   });
 
   return null;
+}
+
+function CandleFlicker({ position, color = "#C19A6B", intensity = 2 }: { position: [number, number, number], color?: string, intensity?: number }) {
+  const lightRef = useRef<THREE.PointLight>(null);
+  useFrame((state) => {
+    if (lightRef.current) {
+      // Shimmering intensity
+      lightRef.current.intensity = intensity + Math.sin(state.clock.elapsedTime * 10) * 0.5 + Math.random() * 0.2;
+    }
+  });
+  return <pointLight ref={lightRef} position={position} color={color} distance={10} castShadow />;
+}
+
+function CursorSpotlight() {
+  const lightRef = useRef<THREE.SpotLight>(null);
+  const targetRef = useRef<THREE.Object3D>(new THREE.Object3D());
+  const { scene, mouse, viewport } = useThree();
+
+  useEffect(() => {
+    const target = targetRef.current;
+    if (scene) scene.add(target);
+    return () => { if (scene) scene.remove(target); };
+  }, [scene]);
+
+  useFrame(() => {
+    if (lightRef.current) {
+      // Map mouse to world coordinates for the spotlight target
+      const x = (mouse.x * viewport.width) / 2;
+      const y = (mouse.y * viewport.height) / 2;
+      targetRef.current.position.set(x, y, -5);
+      lightRef.current.target = targetRef.current;
+      
+      // Move light slightly to follow
+      lightRef.current.position.x = THREE.MathUtils.lerp(lightRef.current.position.x, x * 0.5, 0.1);
+      lightRef.current.position.y = THREE.MathUtils.lerp(lightRef.current.position.y, y * 0.5 + 5, 0.1);
+    }
+  });
+
+  return (
+    <spotLight 
+      ref={lightRef} 
+      position={[0, 5, 5]} 
+      intensity={3} 
+      angle={0.4} 
+      penumbra={1} 
+      color="#FDFBF7" 
+      distance={20}
+    />
+  );
 }
 
 function CinematicEffects({ started }: { started: boolean }) {
@@ -76,6 +125,8 @@ function CinematicEffects({ started }: { started: boolean }) {
           <Cloud segments={20} bounds={[10, 2, 2]} volume={10} color="#C19A6B" opacity={0.15} position={[0, -1, 0]} speed={0.2} />
         </Clouds>
       )}
+      <CandleFlicker position={[-5, 2, -2]} intensity={1.5} />
+      <CandleFlicker position={[5, 2, -2]} intensity={1.5} />
     </>
   );
 }
@@ -120,6 +171,7 @@ export default function GlobalCanvas() {
         {/* Global FX & Lighting */}
         {!started && <Sparkles count={300} scale={12} size={1.5} speed={0.4} opacity={0.6} color="#C19A6B" />}
         <CinematicEffects started={started} />
+        <CursorSpotlight />
 
         <Environment preset="city" />
         <ambientLight intensity={0.5} />

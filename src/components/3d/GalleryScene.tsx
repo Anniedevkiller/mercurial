@@ -102,21 +102,28 @@ export default function GalleryScene() {
       {/* Floating dust particles */}
       <Sparkles count={400} scale={30} size={2} speed={0.2} opacity={0.3} color="#C19A6B" />
 
-      {/* Museum Room Walls - Deep Royal Blue / Dark Navy */}
-      <mesh position={[0, 5, -5]} receiveShadow>
-        <planeGeometry args={[60, 20]} />
-        <meshStandardMaterial color="#020408" roughness={0.8} />
+      {/* Museum Room Walls - Cream as requested */}
+      <mesh position={[0, 5, -8]} receiveShadow>
+        <planeGeometry args={[100, 25]} />
+        <meshStandardMaterial color="#FDFBF7" roughness={0.9} />
+      </mesh>
+      
+      {/* Subtle Gold Trim/Baseboard */}
+      <mesh position={[0, -3.4, -7.9]}>
+        <boxGeometry args={[100, 0.2, 0.1]} />
+        <meshStandardMaterial color="#C19A6B" metalness={0.8} roughness={0.2} />
       </mesh>
 
-      {/* Gallery Floor - Cream/Black with Reflections */}
+      {/* Gallery Floor - High-end Polished Stone */}
       <mesh position={[0, -3.5, 5]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <planeGeometry args={[60, 30]} />
+        <planeGeometry args={[100, 40]} />
         <meshPhysicalMaterial 
-          color="#040A18" 
-          roughness={0.1} 
-          metalness={0.8}
+          color="#020408" 
+          roughness={0.05} 
+          metalness={0.95}
           clearcoat={1}
-          clearcoatRoughness={0.1}
+          clearcoatRoughness={0.02}
+          reflectivity={1}
         />
       </mesh>
 

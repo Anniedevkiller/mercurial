@@ -14,7 +14,7 @@ export function AudioPlayer() {
   useEffect(() => {
     const audio = audioRef.current;
     if (audio && started) {
-      audio.volume = 0.3;
+      audio.volume = 0.15;
       audio.play().then(() => setIsPlaying(true)).catch((e) => {
         console.log("Autoplay prevented:", e);
       });
