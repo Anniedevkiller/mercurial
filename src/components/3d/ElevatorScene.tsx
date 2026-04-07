@@ -6,6 +6,14 @@ import * as THREE from "three";
 import gsap from "gsap";
 import { useRouter } from "next/navigation";
 
+const generateLightsData = () => Array.from({ length: 80 }).map(() => ({
+   x: (Math.random() - 0.5) * 2,
+   y: (Math.random() - 0.5) * 20,
+   z: (Math.random() - 0.5) * 10,
+   h: 0.2 + Math.random(),
+   intensity: Math.random() * 2 + 1
+}));
+
 export default function ElevatorScene({ started }: { started?: boolean }) {
   const leftDoorRef = useRef<THREE.Mesh>(null);
   const rightDoorRef = useRef<THREE.Mesh>(null);
@@ -13,13 +21,7 @@ export default function ElevatorScene({ started }: { started?: boolean }) {
   const [opened, setOpened] = useState(false);
   const router = useRouter();
 
-  const lightsData = useMemo(() => Array.from({ length: 80 }).map(() => ({
-     x: (Math.random() - 0.5) * 2,
-     y: (Math.random() - 0.5) * 20,
-     z: (Math.random() - 0.5) * 10,
-     h: 0.2 + Math.random(),
-     intensity: Math.random() * 2 + 1
-  })), []);
+  const [lightsData] = useState(generateLightsData);
 
   // Skyline motion
   const skylineGroupRef = useRef<THREE.Group>(null);
