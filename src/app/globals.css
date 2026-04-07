@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-royal-blue: #0A1128;
+  --color-gold: #C5A059;
+  --color-ivory: #FDFBF7;
+  --color-dark: #050505;
+
+  --color-background: var(--color-dark);
+  --color-foreground: var(--color-ivory);
+
+  --font-playfair: var(--font-playfair);
+  --font-inter: var(--font-inter);
+  --font-bebas: var(--font-bebas);
+}
+
+:root {
+  --background: #050505;
+  --foreground: #FDFBF7;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), sans-serif;
+  overflow-x: hidden;
+}
