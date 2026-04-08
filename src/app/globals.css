@@ -1,51 +1,23 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme inline {
-  --color-dark-blue: #040A18; /* Richer, darker royal blue / navy */
-  --color-light-yellow: #C19A6B; /* Rich metallic premium gold */
-  --color-gold: #D4AF37; /* Lighter gold for accents */
-  --color-cream: #FDFBF7; /* Cream/off-white for textures */
-  --color-black: #020408; /* Deepest black */
-  --color-grey: #8E8E8E;
-  --color-light-grey: #F5F5F5;
-
-  --color-background: var(--color-dark-blue);
-  --color-foreground: var(--color-cream);
-
-  --font-playfair: var(--font-playfair);
-  --font-inter: var(--font-inter);
-  --font-bebas: var(--font-bebas);
-
-  --animate-flicker: flicker 3s infinite ease-in-out alternate;
-  --animate-float: float 6s infinite ease-in-out alternate;
-  --animate-pulse-slow: pulse-slow 4s infinite ease-in-out;
-
-  @keyframes pulse-slow {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.8; transform: scale(1.02); }
+@layer base {
+  :root {
+    --background: #FDFBF7;
+    --foreground: #1A1C1E;
+    --accent: #C19A6B;
   }
 
-  @keyframes flicker {
-    0% { opacity: 0.8; transform: scale(0.95); }
-    50% { opacity: 1; transform: scale(1.05); }
-    100% { opacity: 0.9; transform: scale(1); }
-  }
-
-  @keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0px); }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    @apply antialiased;
   }
 }
 
-:root {
-  --background: #040A18;
-  --foreground: #FDFBF7;
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-inter), sans-serif;
-  overflow-x: hidden;
+@layer utilities {
+  .text-shadow-lux {
+    text-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
 }

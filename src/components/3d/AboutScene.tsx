@@ -1,23 +1,45 @@
-import { Sparkles } from "@react-three/drei";
-import * as THREE from "three";
+"use client";
+
+import { Float, Text } from "@react-three/drei";
 
 export default function AboutScene() {
-  const target = new THREE.Object3D();
-  target.position.set(0, 0, 0);
-
   return (
     <group>
-      <primitive object={target} />
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]}>
-        <planeGeometry args={[50, 50]} />
-        <meshStandardMaterial color="#0A0A0E" roughness={0.1} metalness={0.85} />
+      {/* Cream Hall */}
+      <mesh position={[0, 5, -8]} receiveShadow>
+        <planeGeometry args={[100, 25]} />
+        <meshStandardMaterial color="#FDFBF7" roughness={0.9} />
       </mesh>
-      <mesh position={[0, 4, -8]}>
-        <planeGeometry args={[50, 20]} />
-        <meshStandardMaterial color="#020204" />
+
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -3.5, 0]}>
+        <planeGeometry args={[100, 50]} />
+        <meshStandardMaterial color="#E8E4D9" roughness={0.5} />
       </mesh>
-      <spotLight position={[0, 10, 6]} angle={1.1} penumbra={1} intensity={5} color="#C19A6B" target={target} />
-      <Sparkles count={200} scale={15} size={2} speed={0.2} opacity={0.5} color="#C19A6B" position={[0, 3, 0]} />
+
+      {/* Floating Brand Monument */}
+      <Float speed={1} rotationIntensity={0.2} floatIntensity={0.5}>
+        <group position={[0, 1, -6]}>
+          <Text
+            font="/fonts/PlayfairDisplay-Bold.ttf"
+            fontSize={0.8}
+            color="#1A1A1A"
+            maxWidth={15}
+            textAlign="center"
+            anchorX="center"
+            anchorY="middle"
+            letterSpacing={0.1}
+          >
+            WHERE SPORT MEETS CULTURE
+          </Text>
+          
+          <mesh position={[0, -1.2, -0.1]}>
+            <boxGeometry args={[10, 0.05, 0.2]} />
+            <meshStandardMaterial color="#C19A6B" />
+          </mesh>
+        </group>
+      </Float>
+
+      <spotLight position={[0, 10, 10]} angle={0.5} penumbra={1} intensity={6} color="#ffffff" castShadow />
     </group>
   );
 }

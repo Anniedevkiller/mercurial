@@ -1,69 +1,35 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Mail, MapPin, Phone } from "lucide-react";
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-transparent pointer-events-none text-foreground flex flex-col items-center justify-start pt-32 pb-20 px-8 overflow-hidden relative">
-      <div className="absolute top-1/4 -right-1/4 w-[800px] h-[800px] bg-dark-blue/5 blur-[150px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 -left-1/4 w-[600px] h-[600px] bg-light-yellow/10 blur-[120px] rounded-full pointer-events-none" />
-
-      <div className="max-w-4xl w-full z-10 text-center mb-20 px-4 pointer-events-auto mt-[40vh] md:mt-[30vh]">
-        <h1 className="font-playfair text-3xl md:text-5xl text-dark-blue mb-8 tracking-[0.2em] leading-relaxed italic uppercase">
-          &quot;Mercurial Sports Imperial is a luxury athlete representation house where talent is curated as legacy.&quot;
-        </h1>
-        <div className="w-24 h-1 bg-light-yellow mx-auto mb-12" />
-        <p className="font-inter text-dark-blue/80 text-xl max-w-3xl mx-auto leading-loose tracking-widest text-center uppercase">
-          We merge elite sports management with artistic expression, global exposure, and cultural storytelling.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-5xl w-full z-10 pointer-events-auto">
+    <main className="relative w-screen h-screen overflow-hidden bg-transparent pointer-events-none">
+      <div className="absolute inset-0 flex flex-col justify-between p-8 md:p-12">
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="flex flex-col items-center text-center space-y-4"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.5, delay: 0.5 }}
+          className="text-left pointer-events-auto"
         >
-          <div className="w-16 h-16 rounded-full border border-dark-blue/30 flex items-center justify-center text-dark-blue mb-2 hover:bg-dark-blue hover:text-white transition-colors duration-500">
-            <MapPin size={24} />
-          </div>
-          <h3 className="font-playfair text-2xl text-dark-blue">The Gallery</h3>
-          <p className="font-inter text-dark-blue/70">
-            One Imperial Plaza<br/>London, UK W1J 7BR
-          </p>
+          <h1 className="font-playfair text-6xl md:text-8xl text-foreground mb-4 uppercase tracking-tighter leading-none">
+            Our <br/>
+            Culture
+          </h1>
+          <div className="w-12 h-1 bg-accent mb-4" />
         </motion.div>
 
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-          className="flex flex-col items-center text-center space-y-4"
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.5, delay: 1 }}
+          className="max-w-xl self-end text-right pointer-events-auto"
         >
-          <div className="w-16 h-16 rounded-full border border-dark-blue/30 flex items-center justify-center text-dark-blue mb-2 hover:bg-dark-blue hover:text-white transition-colors duration-500">
-            <Mail size={24} />
-          </div>
-          <h3 className="font-playfair text-2xl text-dark-blue">Direct Inquiries</h3>
-          <p className="font-inter text-dark-blue/70">
-            executive@mercurial.io<br/>press@mercurial.io
+          <p className="font-playfair italic text-2xl md:text-4xl text-foreground/80 leading-relaxed mb-6">
+            &quot;Mercurial Sports Imperial is a luxury athlete representation house where talent is curated as legacy.&quot;
           </p>
-        </motion.div>
-
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-          className="flex flex-col items-center text-center space-y-4"
-        >
-          <div className="w-16 h-16 rounded-full border border-dark-blue/30 flex items-center justify-center text-dark-blue mb-2 hover:bg-dark-blue hover:text-white transition-colors duration-500">
-            <Phone size={24} />
-          </div>
-          <h3 className="font-playfair text-2xl text-dark-blue">Private Line</h3>
-          <p className="font-inter text-dark-blue/70">
-            +44 (0) 20 7946 0842<br/>By Appointment Only
+          <p className="font-inter text-xs tracking-[0.3em] uppercase text-foreground/40 leading-loose">
+            We merge elite sports management with artistic expression, global exposure, and cultural storytelling.
           </p>
         </motion.div>
       </div>

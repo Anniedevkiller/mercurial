@@ -14,18 +14,15 @@ export default function AutoTourController() {
 
   useEffect(() => {
     if (!started) return;
-    
-    // Only cycle exactly through the defined museum rooms
-    const currentIdx = TOUR_ROUTES.indexOf(pathname);
-    if (currentIdx === -1) return;
 
-    const timer = setTimeout(() => {
-      const nextRoute = TOUR_ROUTES[(currentIdx + 1) % TOUR_ROUTES.length];
-      router.push(nextRoute);
+    const timer = setInterval(() => {
+      const currentIndex = TOUR_ROUTES.indexOf(pathname);
+      const nextIndex = (currentIndex + 1) % TOUR_ROUTES.length;
+      router.push(TOUR_ROUTES[nextIndex]);
     }, TOUR_INTERVAL);
 
-    return () => clearTimeout(timer);
-  }, [pathname, started, router]);
+    return () => clearInterval(timer);
+  }, [started, pathname, router]);
 
   return null;
 }

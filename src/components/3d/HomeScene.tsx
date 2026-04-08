@@ -12,12 +12,7 @@ export default function HomeScene() {
   };
 
   return (
-    <div className="w-screen h-screen xl:w-full xl:h-full absolute inset-0 z-10 overflow-hidden flex items-center justify-center pointer-events-none">
-      {/* Deep Blue Shifting Background Overlay */}
-      <div className="absolute inset-0 bg-[#020408] pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(10,20,40,1)_0%,_rgba(2,4,8,1)_100%)] opacity-80 animate-pulse pointer-events-none" />
-      
-      {/* Hero Content Overlay */}
+    <div className="w-full h-full flex items-center justify-center bg-transparent relative z-10 px-8">
       <AnimatePresence>
         {!started && (
           <motion.div 
@@ -26,50 +21,41 @@ export default function HomeScene() {
             exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)", transition: { duration: 1.5, ease: "easeInOut" } }}
             className="relative z-10 flex flex-col items-center justify-center text-center px-4 w-full h-full pointer-events-none"
           >
-            {/* Cinematic Gradient Overlays */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-light-yellow/10 via-transparent to-transparent pointer-events-none mix-blend-screen" />
-
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-6 mt-10 w-full">
-              <motion.h1 
-                initial={{ opacity: 0, y: 20 }}
+            <div className="flex flex-col items-center gap-12 w-full">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1.2, delay: 0.2 }}
-                className="font-playfair text-5xl sm:text-7xl md:text-8xl lg:text-[10rem] tracking-[0.2em] xl:tracking-[0.3em] uppercase text-cream filter drop-shadow-2xl"
+                transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                className="space-y-4"
               >
-                Mercurial
-              </motion.h1>
-              
-              <motion.h2 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1.2, delay: 0.5 }}
-                className="font-inter text-lg sm:text-2xl md:text-3xl tracking-[0.4em] font-light uppercase text-light-yellow"
-                style={{ textShadow: "0 4px 20px rgba(193,154,107,0.3)" }}
-              >
-                Sports Imperial
-              </motion.h2>
+                <h1 className="font-playfair text-7xl md:text-[8rem] lg:text-[10rem] tracking-tight text-foreground leading-[0.8] uppercase font-black">
+                  Mercurial
+                </h1>
+                <h2 className="font-inter text-xl md:text-2xl tracking-[0.6em] uppercase text-foreground/40 font-light">
+                  Sports Imperial
+                </h2>
+              </motion.div>
 
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 1.5, delay: 1 }}
-                className="font-playfair italic text-cream/70 text-lg sm:text-xl md:text-2xl tracking-wider mt-4"
+                transition={{ duration: 1.5, delay: 0.5 }}
+                className="font-playfair italic text-foreground/60 text-xl md:text-2xl tracking-wider max-w-3xl"
               >
-                Where champions become masterpieces
+                &quot;Where champions become masterpieces&quot;
               </motion.p>
-            </div>
 
-            <motion.button 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 1.5 }}
-              onClick={handleEnter}
-              className="absolute bottom-24 pointer-events-auto px-10 py-5 border border-light-yellow/40 text-light-yellow font-inter uppercase tracking-[0.3em] text-sm sm:text-base hover:border-light-yellow transition-all duration-700 backdrop-blur-md bg-black/20 group animate-[pulse-slow_4s_infinite_ease-in-out] overflow-hidden rounded-sm flex items-center gap-4"
-            >
-              <div className="absolute inset-0 bg-light-yellow/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl pointer-events-none" />
-              <span className="relative z-10 transition-transform group-hover:-translate-x-2 duration-500">Enter the Gallery</span>
-              <ArrowRight className="w-5 h-5 relative z-10 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500" />
-            </motion.button>
+              <motion.button 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 1 }}
+                onClick={handleEnter}
+                className="pointer-events-auto px-12 py-6 bg-foreground text-background rounded-full font-inter uppercase tracking-[0.3em] text-sm hover:scale-105 transition-transform duration-500 flex items-center gap-4 group mt-12 shadow-2xl"
+              >
+                <span>Enter the Gallery</span>
+                <ArrowRight className="w-5 h-5 transition-transform duration-500 group-hover:translate-x-2" />
+              </motion.button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

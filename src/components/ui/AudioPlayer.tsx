@@ -2,13 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Volume2, VolumeX } from "lucide-react";
-
 import { useTourState } from "@/lib/store";
 
 export function AudioPlayer() {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const started = useTourState();
 
   useEffect(() => {
@@ -21,37 +19,30 @@ export function AudioPlayer() {
     }
   }, [started]);
 
-  const toggleMute = () => {
+  const toggle = () => {
     if (audioRef.current) {
-      if (isMuted) {
-        audioRef.current.muted = false;
-        if (!isPlaying) {
-            audioRef.current.play().then(() => setIsPlaying(true)).catch(console.error);
-        }
-        setIsMuted(false);
+      if (isPlaying) {
+        audioRef.current.pause();
       } else {
-        audioRef.current.muted = true;
-        setIsMuted(true);
+        audioRef.current.play();
       }
+      setIsPlaying(!isPlaying);
     }
   };
 
   return (
-    <div className="pointer-events-auto flex items-center justify-center">
-      <audio 
-        ref={audioRef} 
-        src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_aa8ed52093.mp3?filename=smooth-jazz-piano-12-16629.mp3" 
-        loop 
-        preload="auto"
-      />
-      
+    <div className="flex items-center gap-3">
+      <audio ref={audioRef} src="/audio/jazz.mp3" loop />
       <button 
-        onClick={toggleMute}
-        className="w-10 h-10 rounded-full border border-light-yellow/30 bg-black/40 backdrop-blur-md flex items-center justify-center text-light-yellow hover:bg-light-yellow/20 hover:scale-105 transition-all duration-300"
-        title={isMuted ? "Unmute Music" : "Mute Music"}
+        onClick={toggle}
+        className="p-2 rounded-full border border-foreground/10 hover:bg-foreground/5 transition-colors text-foreground/60"
+        aria-label={isPlaying ? "Mute music" : "Unmute music"}
       >
-        {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+        {isPlaying ? <Volume2 size={18} /> : <VolumeX size={18} />}
       </button>
+      <span className="font-bebas text-xs tracking-widest text-foreground/30 uppercase">
+        {isPlaying ? "On" : "Off"}
+      </span >
     </div>
   );
 }
