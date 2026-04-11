@@ -1,167 +1,166 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight } from "lucide-react";
-import { tourStore, useTourState } from "@/lib/store";
-import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import { ArrowRight, Star, Shield, Info } from "lucide-react";
+import { tourStore } from "@/lib/store";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
-export default function HomeScene() {
-  const started = useTourState();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const spotlight1Ref = useRef<HTMLDivElement>(null);
-  const spotlight2Ref = useRef<HTMLDivElement>(null);
+const previewCards = [
+  { id: "athletes", title: "Masterpiece Athletes", icon: Star, desc: "Curating elite competitive legacies." },
+  { id: "services", title: "Premium Services", icon: Shield, desc: "Bespoke strategy for world-class talent." },
+  { id: "about", title: "The Imperial Way", icon: Info, desc: "Our philosophy of excellence." },
+];
 
-  const handleEnter = () => {
-    tourStore.setStarted(true);
-  };
+export default function HomeScene() {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const spotlightRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
-      const { clientX, clientY } = e;
-      const xPos = (clientX / window.innerWidth - 0.5) * 40;
-      const yPos = (clientY / window.innerHeight - 0.5) * 40;
-
-      gsap.to(spotlight1Ref.current, {
-        x: xPos * 1.5,
-        y: yPos * 1.5,
-        duration: 2,
-        ease: "power2.out"
-      });
-      gsap.to(spotlight2Ref.current, {
-        x: -xPos,
-        y: -yPos,
-        duration: 2.5,
-        ease: "power2.out"
-      });
+      setMousePos({ x: e.clientX, y: e.clientY });
+      if (spotlightRef.current) {
+        gsap.to(spotlightRef.current, {
+          x: e.clientX - 400,
+          y: e.clientY - 400,
+          duration: 1.5,
+          ease: "power2.out"
+        });
+      }
     };
-
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
   return (
-    <div ref={containerRef} className="fixed inset-0 flex items-center justify-center bg-transparent z-10 px-4 md:px-12 lg:px-24 overflow-hidden pointer-events-none">
-      {/* Background Motion Layer */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Spotlight Beams with mouse parallax */}
-        <div ref={spotlight1Ref} className="absolute -top-1/2 -left-1/4 w-full h-[200%] bg-gradient-to-b from-accent-gold/15 to-transparent blur-[120px] origin-top opacity-60" />
-        <div ref={spotlight2Ref} className="absolute -top-1/2 -right-1/4 w-full h-[200%] bg-gradient-to-b from-accent-blue/5 to-transparent blur-[150px] origin-top opacity-40" />
+    <div className="relative w-full">
+      {/* Spotlight Backdrop */}
+      <div 
+        ref={spotlightRef}
+        className="fixed top-0 left-0 w-[800px] h-[800px] bg-accent-gold/5 rounded-full blur-[150px] pointer-events-none z-0"
+      />
 
-        {/* Floating Dust Particles */}
-        <div className="absolute inset-0">
-          {[...Array(30)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ 
-                x: Math.random() * 100 + "%", 
-                y: Math.random() * 100 + "%", 
-                opacity: 0 
-              }}
-              animate={{ 
-                y: [null, "-40px", "40px"],
-                opacity: [0, 0.4, 0],
-                scale: [1, 1.2, 1]
-              }}
-              transition={{ 
-                duration: 7 + Math.random() * 7, 
-                repeat: Infinity, 
-                ease: "easeInOut",
-                delay: Math.random() * 5
-              }}
-              className="absolute w-1 h-1 bg-accent-gold/20 rounded-full blur-[2px]"
-            />
-          ))}
-        </div>
-      </div>
-
-      <AnimatePresence mode="wait">
-        {!started && (
+      {/* Hero Section */}
+      <section className="section-padding min-h-screen flex items-center relative z-10 overflow-hidden">
+        <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          
+          {/* Left Column: Brand & Editorial Input */}
           <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ 
-              opacity: 0, 
-              scale: 1.05, 
-              y: -40,
-              filter: "blur(10px)", 
-              transition: { duration: 1.2, ease: [0.76, 0, 0.24, 1] } 
-            }}
-            className="relative flex flex-col items-center justify-center text-center w-full max-w-7xl pt-20"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1.5, ease: "expo.out" }}
+            className="space-y-12"
           >
-            <div className="flex flex-col items-center gap-12 md:gap-20 w-full">
-              {/* Main Title Group */}
-              <div className="space-y-0 text-shadow-lux">
-                <div className="overflow-hidden">
-                  <motion.h1 
-                    initial={{ y: "110%", skewY: 5 }}
-                    animate={{ y: 0, skewY: 0 }}
-                    transition={{ duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
-                    className="font-playfair text-[clamp(3.5rem,10vw,7.5rem)] text-foreground tracking-tighter"
-                  >
-                    Mercurial
-                  </motion.h1>
-                </div>
-                <div className="overflow-hidden -mt-2 md:-mt-6">
-                  <motion.h2 
-                    initial={{ y: "110%", opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 1.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                    className="font-playfair text-[clamp(1.2rem,3.5vw,2.8rem)] text-accent-blue tracking-[0.4em] md:tracking-[0.6em] font-medium"
-                  >
-                    Sports Imperial
-                  </motion.h2>
-                </div>
-              </div>
-
-              {/* Subheading with elegant line */}
-              <div className="flex flex-col items-center gap-6 max-w-3xl">
-                <motion.div 
-                   initial={{ scaleX: 0 }}
-                   animate={{ scaleX: 1 }}
-                   transition={{ duration: 2, delay: 1, ease: [0.16, 1, 0.3, 1] }}
-                   className="h-[1px] bg-accent-gold/30 w-24 md:w-40"
-                />
-                <motion.p
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1.5, delay: 1.2 }}
-                  className="font-playfair italic text-foreground/70 text-base md:text-2xl lg:text-3xl px-8"
-                >
-                  &quot;Where champions become masterpieces&quot;
-                </motion.p>
-              </div>
-
-              {/* Action Area */}
-              <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1.2, delay: 1.8 }}
-                className="pt-2 md:pt-4"
+            <div className="space-y-4">
+              <motion.span 
+                initial={{ opacity: 0, letterSpacing: "1em" }}
+                animate={{ opacity: 1, letterSpacing: "0.5em" }}
+                transition={{ duration: 2, delay: 0.5 }}
+                className="font-bebas text-xs text-accent-gold uppercase block"
               >
-                <button 
-                  onClick={handleEnter}
-                  className="pointer-events-auto group relative px-10 py-5 md:px-16 md:py-7 bg-accent-blue text-white overflow-hidden transition-all duration-700 hover:shadow-[0_20px_50px_rgba(0,26,77,0.3)]"
-                >
-                  <span className="relative z-10 flex items-center gap-4 font-bebas tracking-[0.3em] text-xs md:text-sm uppercase font-bold">
-                    Enter the Gallery <ArrowRight size={18} className="transition-transform duration-500 group-hover:translate-x-2" />
-                  </span>
-                  <div className="absolute inset-0 bg-accent-gold translate-x-[-101%] group-hover:translate-x-0 transition-transform duration-700 ease-[0.76, 0, 0.24, 1]" />
-                </button>
-              </motion.div>
+                The Art of Performance
+              </motion.span>
+              <h1 className="text-foreground tracking-tighter leading-[0.85] uppercase">
+                Mercurial <br/>
+                <span className="text-accent-blue opacity-90 italic">Sports Imperial</span>
+              </h1>
             </div>
 
-            {/* Bottom Accent */}
-            <motion.div 
-               initial={{ width: 0 }}
-               animate={{ width: "100%" }}
-               transition={{ duration: 3, delay: 0.5, ease: [0.87, 0, 0.13, 1] }}
-               className="absolute bottom-0 left-0 h-[1px] bg-gradient-to-r from-transparent via-accent-gold/40 to-transparent"
-            />
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.2, delay: 1 }}
+              className="text-lg lg:text-2xl font-playfair italic max-w-lg leading-relaxed border-l-2 border-accent-gold/20 pl-8"
+            >
+              &quot;Where champions become masterpieces. Our agency transcends management—we curate the legacy of the world&apos;s sporting elite.&quot;
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 1.5 }}
+            >
+              <button 
+                onClick={() => tourStore.setStarted(true)}
+                className="btn-premium group"
+              >
+                Enter the Gallery
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-2" />
+              </button>
+            </motion.div>
           </motion.div>
-        )}
-      </AnimatePresence>
+
+          {/* Right Column: Framed Editorial Portrait */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95, rotate: 2 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ duration: 2, ease: "expo.out" }}
+            className="relative flex justify-center lg:justify-end"
+          >
+            <div className="gold-frame w-[300px] h-[400px] md:w-[450px] md:h-[600px] animate-glimmer bg-accent-blue/5 overflow-hidden shadow-[0_50px_100px_rgba(0,0,0,0.1)]">
+              {/* This would be the 3D art piece or high-end image */}
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.05, 1],
+                  rotateY: [0, 5, 0]
+                }}
+                transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+                className="w-full h-full bg-gradient-to-br from-accent-blue/10 via-transparent to-accent-gold/10 flex items-center justify-center relative"
+              >
+                <img 
+                  src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1920&auto=format&fit=crop" 
+                  alt="Luxe Sports Portrait"
+                  className="w-full h-full object-cover grayscale opacity-80 hover:grayscale-0 transition-all duration-1000"
+                />
+                <div className="absolute inset-0 bg-accent-blue/20 mix-blend-overlay pointer-events-none" />
+              </motion.div>
+            </div>
+            
+            {/* Background floating element */}
+            <div className="absolute -z-10 -bottom-12 -right-12 w-64 h-64 bg-accent-gold/10 rounded-full blur-[80px]" />
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Preview Cards Section */}
+      <section className="section-padding bg-white/30 backdrop-blur-sm border-t border-accent-gold/10">
+        <div className="max-w-7xl mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-24 space-y-4"
+          >
+            <h4 className="font-bebas text-xs tracking-[0.5em] text-accent-gold uppercase">Explore the Foundation</h4>
+            <h2 className="text-accent-blue">The Imperial Collection</h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            {previewCards.map((card, idx) => (
+              <motion.div
+                key={card.id}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.2 }}
+                className="card-gallery group p-12 space-y-8 flex flex-col items-center text-center cursor-pointer"
+              >
+                <div className="w-16 h-16 rounded-full bg-accent-blue/5 border border-accent-gold/20 flex items-center justify-center text-accent-gold transition-colors group-hover:bg-accent-blue group-hover:text-white group-hover:border-transparent duration-500">
+                  <card.icon size={24} />
+                </div>
+                <div className="space-y-4">
+                  <h3 className="text-xl md:text-2xl text-accent-blue">{card.title}</h3>
+                  <div className="w-12 h-[1px] bg-accent-gold mx-auto group-hover:w-20 transition-all duration-500" />
+                  <p className="font-inter text-sm tracking-wide">{card.desc}</p>
+                </div>
+                <div className="pt-4 flex items-center gap-2 text-accent-gold font-bebas text-[10px] tracking-[0.3em] uppercase opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 text-bold underline">
+                  Discover Now <ArrowRight size={14} />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

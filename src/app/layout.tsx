@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, Inter, Bebas_Neue } from "next/font/google";
 import "./globals.css";
 import { Navigation } from "@/components/ui/Navigation";
+import { Footer } from "@/components/ui/Footer";
 import GlobalCanvas from "@/components/3d/GlobalCanvas";
 
 const playfair = Playfair_Display({
@@ -42,14 +43,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${inter.variable} ${bebas.variable} h-full antialiased`}
+      className={`${playfair.variable} ${inter.variable} ${bebas.variable} antialiased`}
     >
-      <body className="font-inter bg-background text-foreground antialiased h-full w-full overflow-hidden">
-        <div className="fixed inset-0 w-full h-full overflow-hidden">
-          <GlobalCanvas />
-          <Navigation />
+      <body className="font-inter bg-background text-foreground antialiased min-h-screen">
+        <GlobalCanvas />
+        <Navigation />
+        <main>
           {children}
-        </div>
+        </main>
+        <Footer />
       </body>
     </html>
   );

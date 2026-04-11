@@ -97,10 +97,10 @@ export default function GlobalCanvas() {
   const started = useTourState();
   
   return (
-    <div className="fixed inset-0 z-0 pointer-events-none">
+    <div className="fixed inset-0 z-[-1] pointer-events-none">
       <Canvas
         camera={{ position: [0, 1.5, 6], fov: 45 }}
-        gl={{ antialias: true, alpha: false }}
+        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
         dpr={[1, 2]}
       >
         <Suspense fallback={null}>
