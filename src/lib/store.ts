@@ -24,7 +24,7 @@ class TourStore {
 
   subscribe(l: Listener) {
     this.listeners.add(l);
-    return () => this.listeners.delete(l);
+    return () => { this.listeners.delete(l); };
   }
 }
 
@@ -32,6 +32,8 @@ export const tourStore = new TourStore();
 
 export function useTourState() {
   const [started, setStarted] = useState(tourStore.started);
-  useEffect(() => tourStore.subscribe(setStarted), []);
+  useEffect(() => {
+    return tourStore.subscribe(setStarted);
+  }, []);
   return started;
 }

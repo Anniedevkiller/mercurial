@@ -31,18 +31,31 @@ export function AudioPlayer() {
   };
 
   return (
-    <div className="flex items-center gap-3">
-      <audio ref={audioRef} src="/audio/jazz.mp3" loop />
+    <div className="flex items-center gap-4 group">
+      <audio 
+        ref={audioRef} 
+        src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" 
+        loop 
+      />
+      <div className="flex flex-col text-right">
+        <span className="font-bebas text-[9px] tracking-[0.4em] text-accent-gold uppercase leading-tight">
+          Experience
+        </span>
+        <span className="font-playfair italic text-[10px] text-foreground/40 leading-tight">
+          {isPlaying ? "Luxury Ambient" : "Muted"}
+        </span>
+      </div>
       <button 
         onClick={toggle}
-        className="p-2 rounded-full border border-foreground/10 hover:bg-foreground/5 transition-colors text-foreground/60"
-        aria-label={isPlaying ? "Mute music" : "Unmute music"}
+        className={`p-3 rounded-full border transition-all duration-700 ${
+          isPlaying 
+            ? "bg-accent-blue/5 border-accent-gold/40 text-accent-gold shadow-[0_0_20px_rgba(197,160,89,0.2)]" 
+            : "border-foreground/10 text-foreground/30 hover:border-accent-gold/40 hover:text-accent-gold"
+        }`}
+        aria-label={isPlaying ? "Mute" : "Unmute"}
       >
-        {isPlaying ? <Volume2 size={18} /> : <VolumeX size={18} />}
+        {isPlaying ? <Volume2 size={16} /> : <VolumeX size={16} />}
       </button>
-      <span className="font-bebas text-xs tracking-widest text-foreground/30 uppercase">
-        {isPlaying ? "On" : "Off"}
-      </span >
     </div>
   );
 }

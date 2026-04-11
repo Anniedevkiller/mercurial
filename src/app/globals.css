@@ -1,23 +1,90 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-accent-blue: #001A4D; /* Midnight Royal */
+  --color-accent-gold: #C5A059; /* Champagne Gold */
+  
+  --background: #FBF9F4; /* Clean Gallery Ivory */
+  --foreground: #0A1128; /* Deep Royal Navy */
+  
+  --font-playfair: var(--font-playfair);
+  --font-inter: var(--font-inter);
+  --font-bebas: var(--font-bebas);
+}
 
 @layer base {
-  :root {
-    --background: #FDFBF7;
-    --foreground: #1A1C1E;
-    --accent: #C19A6B;
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background-color: var(--background);
   }
 
   body {
-    background-color: var(--background);
     color: var(--foreground);
-    @apply antialiased;
+    font-family: var(--font-inter), sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Responsive Typographic Scale */
+  h1 {
+    @apply font-playfair uppercase font-black leading-[0.85] tracking-tighter;
+    font-size: clamp(2.5rem, 8vw, 7rem);
+  }
+
+  h2 {
+    @apply font-playfair font-medium uppercase;
+    font-size: clamp(1.2rem, 4vw, 3.5rem);
+    letter-spacing: 0.3em;
+  }
+
+  p {
+    @apply font-inter leading-relaxed;
+    font-size: clamp(0.75rem, 1.5vw, 1.125rem);
+  }
+
+  ::selection {
+    background-color: rgba(197, 160, 89, 0.3);
+    color: var(--accent-blue);
   }
 }
 
 @layer utilities {
   .text-shadow-lux {
-    text-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    text-shadow: 0 10px 30px rgba(0, 26, 77, 0.08);
   }
+
+  .gold-frame {
+    border: 8px solid var(--color-accent-gold);
+    box-shadow: 
+      inset 0 0 15px rgba(0,0,0,0.05),
+      0 10px 40px rgba(197, 160, 89, 0.15);
+    position: relative;
+  }
+
+  .gold-frame::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border: 1px solid rgba(255,255,255,0.3);
+    pointer-events: none;
+  }
+
+  .glass-card {
+    @apply bg-white/40 backdrop-blur-xl border border-white/20 shadow-2xl;
+  }
+}
+
+/* Animations for "Alive" feel */
+@keyframes glimmer {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.2); }
+  100% { filter: brightness(1); }
+}
+
+.animate-glimmer {
+  animation: glimmer 4s infinite ease-in-out;
 }

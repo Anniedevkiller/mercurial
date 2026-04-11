@@ -27,6 +27,13 @@ export const metadata: Metadata = {
   description: "Premium immersive sports agency website.",
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,10 +44,12 @@ export default function RootLayout({
       lang="en"
       className={`${playfair.variable} ${inter.variable} ${bebas.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-inter bg-background text-foreground overflow-x-hidden">
-        <GlobalCanvas />
-        <Navigation />
-        {children}
+      <body className="font-inter bg-background text-foreground antialiased h-full w-full overflow-hidden">
+        <div className="fixed inset-0 w-full h-full overflow-hidden">
+          <GlobalCanvas />
+          <Navigation />
+          {children}
+        </div>
       </body>
     </html>
   );

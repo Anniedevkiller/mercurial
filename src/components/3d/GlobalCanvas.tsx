@@ -70,13 +70,22 @@ function CursorSpotlight() {
       const y = (mouse.y * viewport.height) / 2;
       targetRef.current.position.set(x, y, -5);
       lightRef.current.target = targetRef.current;
-      lightRef.current.position.x = THREE.MathUtils.lerp(lightRef.current.position.x, x * 0.5, 0.1);
-      lightRef.current.position.y = THREE.MathUtils.lerp(lightRef.current.position.y, y * 0.5 + 5, 0.1);
+      lightRef.current.position.x = THREE.MathUtils.lerp(lightRef.current.position.x, x * 0.4, 0.1);
+      lightRef.current.position.y = THREE.MathUtils.lerp(lightRef.current.position.y, y * 0.4 + 5, 0.1);
     }
   });
 
   return (
-    <spotLight ref={lightRef} position={[0, 5, 5]} intensity={2} angle={0.4} penumbra={1} color="#ffffff" distance={20} />
+    <spotLight 
+      ref={lightRef} 
+      position={[0, 8, 8]} 
+      intensity={1.5} 
+      angle={0.3} 
+      penumbra={1} 
+      color="#D4AF37" /* Gold Spotlight */
+      distance={25} 
+      castShadow 
+    />
   );
 }
 
@@ -88,35 +97,34 @@ export default function GlobalCanvas() {
   const started = useTourState();
   
   return (
-    <Canvas
-      camera={{ position: [0, 1.5, 6], fov: 45 }}
-      gl={{ antialias: true, alpha: false }}
-      dpr={[1, 2]}
-      className="fixed inset-0 z-0 pointer-events-none"
-    >
-      <Suspense fallback={null}>
-        <CameraRig started={started} />
-        <ElevatorScene started={started} />
-        
-        <group position={[0, -0.5, -15]}>
-          <MemoGalleryScene />
-        </group>
-        <group position={[40, -0.5, -15]}>
-          <MemoServicesScene />
-        </group>
-        <group position={[80, -0.5, -15]}>
-          <MemoAboutScene />
-        </group>
-
-        <CandleFlicker position={[-5, 2, -2]} />
-        <CandleFlicker position={[5, 2, -2]} />
-        <CursorSpotlight />
-
-        <Environment preset="city" />
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[2, 5, 2]} intensity={1.5} color="#FDFBF7" />
-        <Preload all />
-      </Suspense>
-    </Canvas>
+    <div className="fixed inset-0 z-0 pointer-events-none">
+      <Canvas
+        camera={{ position: [0, 1.5, 6], fov: 45 }}
+        gl={{ antialias: true, alpha: false }}
+        dpr={[1, 2]}
+      >
+        <Suspense fallback={null}>
+          <CameraRig started={started} />
+          <ElevatorScene started={started} />
+          
+          <group position={[0, -0.5, -15]}>
+            <MemoGalleryScene />
+          </group>
+          <group position={[40, -0.5, -15]}>
+            <MemoServicesScene />
+          </group>
+          <group position={[80, -0.5, -15]}>
+            <MemoAboutScene />
+          </group>
+  
+          <CursorSpotlight />
+  
+          <Environment preset="apartment" />
+          <ambientLight intensity={0.4} />
+          <directionalLight position={[5, 10, 5]} intensity={1.2} color="#F8F4EC" castShadow />
+          <Preload all />
+        </Suspense>
+      </Canvas>
+    </div>
   );
 }

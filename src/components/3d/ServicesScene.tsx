@@ -13,21 +13,27 @@ const services = [
 export default function ServicesScene() {
   return (
     <group>
-      {/* Cream Walls */}
+      {/* Luxury Cream Walls */}
       <mesh position={[0, 5, -8]} receiveShadow>
         <planeGeometry args={[100, 25]} />
-        <meshStandardMaterial color="#FDFBF7" roughness={0.9} />
+        <meshStandardMaterial color="#F8F4EC" roughness={0.8} />
       </mesh>
 
       <mesh position={[0, -3.4, -7.9]}>
-        <boxGeometry args={[100, 0.2, 0.1]} />
-        <meshStandardMaterial color="#C19A6B" />
+        <boxGeometry args={[100, 0.4, 0.2]} />
+        <meshStandardMaterial color="#D4AF37" metalness={0.8} />
       </mesh>
 
-      {/* Light Floor */}
+      {/* Royal Blue Top Band */}
+      <mesh position={[0, 10, -7.9]}>
+        <planeGeometry args={[100, 4]} />
+        <meshStandardMaterial color="#002366" />
+      </mesh>
+
+      {/* Premium Marble Floor */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -3.5, 0]}>
         <planeGeometry args={[100, 50]} />
-        <meshStandardMaterial color="#E8E4D9" roughness={0.5} />
+        <meshPhysicalMaterial color="#FFF9F2" roughness={0.02} metalness={0.05} clearcoat={1} />
       </mesh>
 
       {/* Exhibition Panels */}
@@ -36,13 +42,19 @@ export default function ServicesScene() {
           <Float key={idx} speed={1.5} rotationIntensity={0.1} floatIntensity={0.3}>
             <group position={[(idx - 2) * 8, 0, 0]}>
               <mesh castShadow>
-                <boxGeometry args={[6, 8, 0.1]} />
-                <meshStandardMaterial color="#ffffff" metalness={0.05} roughness={0.1} />
+                <boxGeometry args={[6.2, 8.2, 0.2]} />
+                <meshStandardMaterial color="#D4AF37" metalness={0.8} roughness={0.2} />
+              </mesh>
+              {/* Inner Inset */}
+              <mesh position={[0, 0, 0.05]}>
+                <planeGeometry args={[5.8, 7.8]} />
+                <meshStandardMaterial color="#F8F4EC" />
               </mesh>
               <Html position={[0, 0, 0.1]} center transform occlude zIndexRange={[10, 0]}>
-                <div className="w-64 text-center select-none pointer-events-none p-6 bg-white/10 backdrop-blur-sm border border-foreground/5 rounded-xl">
-                  <h3 className="font-playfair text-xl text-foreground mb-4 uppercase tracking-[0.2em] font-semibold">{svc.title}</h3>
-                  <p className="font-inter text-[10px] text-foreground/40 leading-relaxed uppercase tracking-widest">{svc.desc}</p>
+                <div className="w-64 text-center select-none pointer-events-none p-10 bg-[#002366]/5 backdrop-blur-xl border border-accent-gold/20">
+                  <span className="font-bebas text-[10px] tracking-[0.4em] text-[#D4AF37] mb-4 block">Service Offering</span>
+                  <h3 className="font-playfair text-2xl text-[#0A1128] mb-6 uppercase tracking-tight font-black leading-tight border-b border-[#D4AF37]/30 pb-4">{svc.title}</h3>
+                  <p className="font-inter text-[10px] text-[#0A1128]/60 leading-relaxed uppercase tracking-[0.2em]">{svc.desc}</p>
                 </div>
               </Html>
             </group>
