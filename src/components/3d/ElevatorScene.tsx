@@ -16,10 +16,19 @@ export default function ElevatorScene({ started }: { started: boolean }) {
   const animStarted = useRef(false);
 
   useEffect(() => {
-    if (started && !animStarted.current) {
+    // Reset animation flag when pathname is "/", allowing the sequence to replay on loop
+    if (window.location.pathname === "/") {
+      animStarted.current = false;
+      // Reset doors if they were open
+      if (leftDoor.current) leftDoor.current.position.x = -1;
+      if (rightDoor.current) rightDoor.current.position.x = 1;
+      if (backLeftDoor.current) backLeftDoor.current.position.x = -1;
+      if (backRightDoor.current) backRightDoor.current.position.x = 1;
+    }
+
+    if (started && !animStarted.current && window.location.pathname === "/") {
       animStarted.current = true;
       
-      // Extended cinematic sequence
       const tl = gsap.timeline({
         onComplete: () => {
           router.push("/athletes");
@@ -29,16 +38,16 @@ export default function ElevatorScene({ started }: { started: boolean }) {
       // 1. Initial breathing/float effect
       tl.to(group.current!.position, { y: -0.4, duration: 2.5, ease: "sine.inOut" });
 
-      // 2. Front doors open with a premium weight
+      // 2. Front doors open
       tl.to(leftDoor.current!.position, { x: -2.2, duration: 2, ease: "power2.inOut" }, 1);
       tl.to(rightDoor.current!.position, { x: 2.2, duration: 2, ease: "power2.inOut" }, 1);
 
-      // 3. User camera enters - using "expo" for a smooth start and slow end
-      tl.to(group.current!.position, { z: 4.5, duration: 4, ease: "expo.inOut" }, 1.5);
+      // 3. User camera enters - synchronizing with CameraRig (which will follow started flag)
+      // No group movement here to avoid jitter
 
-      // 4. Back doors reveal transition with a subtle bounce
-      tl.to(backLeftDoor.current!.position, { x: -2.3, duration: 2.5, ease: "power4.inOut" }, 4.5);
-      tl.to(backRightDoor.current!.position, { x: 2.3, duration: 2.5, ease: "power4.inOut" }, 4.5);
+      // 4. Back doors open after 3 seconds of "travel"
+      tl.to(backLeftDoor.current!.position, { x: -2.3, duration: 2.5, ease: "power4.inOut" }, 4);
+      tl.to(backRightDoor.current!.position, { x: 2.3, duration: 2.5, ease: "power4.inOut" }, 4);
     }
   }, [started, router]);
 

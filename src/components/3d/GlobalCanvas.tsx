@@ -15,10 +15,10 @@ import AboutScene from "./AboutScene";
 
 const ROOMS: Record<string, { pos: [number, number, number], lookAt: [number, number, number] }> = {
   "/": { pos: [0, 1.5, 6], lookAt: [0, 1.5, 0] },
-  "/athletes": { pos: [0, 1.5, -10], lookAt: [0, 1.2, -25] },
-  "/services": { pos: [25, 1.5, -10], lookAt: [25, 1.2, -25] },
-  "/about": { pos: [50, 1.5, -10], lookAt: [50, 1.2, -25] },
-  "/contact": { pos: [75, 1.5, -10], lookAt: [75, 1.2, -25] }
+  "/athletes": { pos: [0, 1.5, -8], lookAt: [0, 1.5, -25] },
+  "/services": { pos: [20, 1.5, -8], lookAt: [20, 1.5, -25] },
+  "/about": { pos: [40, 1.5, -8], lookAt: [40, 1.5, -25] },
+  "/contact": { pos: [60, 1.5, -8], lookAt: [60, 1.5, -25] }
 };
 
 function CameraRig({ started }: { started: boolean }) {
@@ -35,11 +35,11 @@ function CameraRig({ started }: { started: boolean }) {
       const lookTarget = new THREE.Vector3(...currentRoom.lookAt);
 
       // When tour starts on Home page, move camera INTO the elevator
-      const finalPos = (pathname === "/" && started) ? new THREE.Vector3(0, 1.5, -1) : posTarget;
-      const finalLook = (pathname === "/" && started) ? new THREE.Vector3(0, 1.5, -10) : lookTarget;
+      const finalPos = (pathname === "/" && started) ? new THREE.Vector3(0, 1.5, -3) : posTarget;
+      const finalLook = (pathname === "/" && started) ? new THREE.Vector3(0, 1.5, -15) : lookTarget;
 
       // During the very initial transition from Home to /athletes, we want a specific speed
-      const lerpSpeed = pathname === "/" ? 0.01 : 0.03;
+      const lerpSpeed = (pathname === "/" && started) ? 0.005 : 0.03;
       
       state.camera.position.lerp(finalPos, lerpSpeed);
       
@@ -121,10 +121,10 @@ export default function GlobalCanvas() {
           <group position={[0, -0.5, -25]}>
             <MemoGalleryScene />
           </group>
-          <group position={[25, -0.5, -25]}>
+          <group position={[20, -0.5, -25]}>
             <MemoServicesScene />
           </group>
-          <group position={[50, -0.5, -25]}>
+          <group position={[40, -0.5, -25]}>
             <MemoAboutScene />
           </group>
   
