@@ -15,9 +15,10 @@ import AboutScene from "./AboutScene";
 
 const ROOMS: Record<string, { pos: [number, number, number], lookAt: [number, number, number] }> = {
   "/": { pos: [0, 1.5, 6], lookAt: [0, 1.5, 0] },
-  "/athletes": { pos: [0, 0.5, -4], lookAt: [0, 0, -15] },
-  "/services": { pos: [40, 0.5, -4], lookAt: [40, 0, -15] },
-  "/about": { pos: [80, 0.5, -4], lookAt: [80, 0, -15] }
+  "/athletes": { pos: [0, 1.5, -10], lookAt: [0, 1.2, -25] },
+  "/services": { pos: [25, 1.5, -10], lookAt: [25, 1.2, -25] },
+  "/about": { pos: [50, 1.5, -10], lookAt: [50, 1.2, -25] },
+  "/contact": { pos: [75, 1.5, -10], lookAt: [75, 1.2, -25] }
 };
 
 function CameraRig({ started }: { started: boolean }) {
@@ -26,18 +27,26 @@ function CameraRig({ started }: { started: boolean }) {
 
   useFrame((state) => {
     if (!started && pathname === "/") {
-      const targetZ = 4.0;
+      const targetZ = 4.5;
       state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, targetZ, 0.005);
       state.camera.lookAt(0, 1.5, 0);
     } else if (started) {
       const posTarget = new THREE.Vector3(...currentRoom.pos);
       const lookTarget = new THREE.Vector3(...currentRoom.lookAt);
-      state.camera.position.lerp(posTarget, 0.03);
+
+      // When tour starts on Home page, move camera INTO the elevator
+      const finalPos = (pathname === "/" && started) ? new THREE.Vector3(0, 1.5, -1) : posTarget;
+      const finalLook = (pathname === "/" && started) ? new THREE.Vector3(0, 1.5, -10) : lookTarget;
+
+      // During the very initial transition from Home to /athletes, we want a specific speed
+      const lerpSpeed = pathname === "/" ? 0.01 : 0.03;
+      
+      state.camera.position.lerp(finalPos, lerpSpeed);
       
       const currentLookAt = new THREE.Vector3(0, 0, -1);
       currentLookAt.applyQuaternion(state.camera.quaternion);
       currentLookAt.add(state.camera.position);
-      currentLookAt.lerp(lookTarget, 0.03);
+      currentLookAt.lerp(finalLook, lerpSpeed);
       state.camera.lookAt(currentLookAt);
     }
   });
@@ -109,13 +118,13 @@ export default function GlobalCanvas() {
           <CameraRig started={started} />
           <ElevatorScene started={started} />
           
-          <group position={[0, -0.5, -15]}>
+          <group position={[0, -0.5, -25]}>
             <MemoGalleryScene />
           </group>
-          <group position={[40, -0.5, -15]}>
+          <group position={[25, -0.5, -25]}>
             <MemoServicesScene />
           </group>
-          <group position={[80, -0.5, -15]}>
+          <group position={[50, -0.5, -25]}>
             <MemoAboutScene />
           </group>
   

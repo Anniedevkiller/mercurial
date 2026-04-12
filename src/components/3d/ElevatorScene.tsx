@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { Sparkles } from "@react-three/drei";
 import gsap from "gsap";
 import { useRouter } from "next/navigation";
 
@@ -70,14 +71,23 @@ export default function ElevatorScene({ started }: { started: boolean }) {
         <planeGeometry args={[5, 4.5]} />
         <meshPhysicalMaterial 
           transparent 
-          opacity={0.4} 
-          transmission={0.95} 
-          thickness={1} 
-          roughness={0} 
+          opacity={0.3} 
+          transmission={0.9} 
+          thickness={0.5} 
+          roughness={0.05} 
           metalness={0.1}
           color="#E0F2FE" 
         />
       </mesh>
+
+      {/* Skyline View behind the glass */}
+      <mesh position={[-3, 2, -2.5]} rotation={[0, Math.PI / 2, 0]}>
+        <planeGeometry args={[10, 8]} />
+        <meshBasicMaterial color="#0A1128" /> {/* Night sky base */}
+        <pointLight position={[0, 2, 2]} intensity={2} color="#D4AF37" />
+      </mesh>
+      {/* City Lights (Simple representaiton) */}
+      <Sparkles count={50} position={[-2.9, 2, -2.5]} scale={[0.1, 5, 5]} size={2} color="#D4AF37" />
 
       {/* Chrome Trim / Reflections */}
       <mesh position={[-2.45, 2, -2.5]} rotation={[0, Math.PI / 2, 0]}>

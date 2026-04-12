@@ -35,6 +35,8 @@ export const viewport = {
   userScalable: false,
 };
 
+import AutoTourController from "@/components/AutoTourController";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -47,6 +49,7 @@ export default function RootLayout({
     >
       <body className="font-inter text-foreground antialiased min-h-screen">
         <GlobalCanvas />
+        <AutoTourController />
         <Navigation />
         <main>
           {children}
