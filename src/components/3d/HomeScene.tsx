@@ -133,7 +133,10 @@ export default function HomeScene() {
               transition={{ duration: 0.8, delay: 1.2 }}
             >
               <button 
-                onClick={() => tourStore.setStarted(true)}
+                onClick={() => {
+                  tourStore.setStarted(true);
+                  document.getElementById('athletes')?.scrollIntoView({ behavior: 'smooth' });
+                }}
                 className="group relative inline-flex items-center gap-6 px-10 py-5 bg-[#FBF9F4] border border-accent-gold rounded-full text-accent-blue font-playfair uppercase tracking-[0.2em] text-xs font-bold transition-all duration-700 hover:shadow-[0_20px_40px_rgba(197,160,89,0.25)] hover:-translate-y-2 overflow-hidden"
               >
                 <span className="relative z-10 flex items-center gap-3">

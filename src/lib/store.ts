@@ -6,6 +6,7 @@ type Listener = (v: boolean) => void;
 class TourStore {
   started = false;
   autoTourActive = false;
+  activeSection = "/";
   listeners = new Set<Listener>();
 
   setStarted(v: boolean) {
@@ -15,6 +16,11 @@ class TourStore {
 
   setAutoTour(v: boolean) {
     this.autoTourActive = v;
+    this.notify();
+  }
+
+  setActiveSection(v: string) {
+    this.activeSection = v;
     this.notify();
   }
 
@@ -32,8 +38,15 @@ export const tourStore = new TourStore();
 
 export function useTourState() {
   const [started, setStarted] = useState(tourStore.started);
+  const [activeSection, setActiveSection] = useState(tourStore.activeSection);
+
   useEffect(() => {
-    return tourStore.subscribe(setStarted);
+    const unsub = tourStore.subscribe(() => {
+      setStarted(tourStore.started);
+      setActiveSection(tourStore.activeSection);
+    });
+    return unsub;
   }, []);
-  return started;
+
+  return { started, activeSection };
 }

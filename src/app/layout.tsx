@@ -47,14 +47,13 @@ export default function RootLayout({
       lang="en"
       className={`${playfair.variable} ${inter.variable} ${bebas.variable} antialiased`}
     >
-      <body className="font-inter text-foreground antialiased min-h-screen">
+      <body className="font-inter text-foreground antialiased h-screen overflow-hidden">
         <GlobalCanvas />
         <AutoTourController />
         <Navigation />
-        <main>
+        <main className="h-full w-full">
           {children}
         </main>
-        <Footer />
       </body>
     </html>
   );

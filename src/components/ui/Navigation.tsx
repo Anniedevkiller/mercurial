@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTourState } from "@/lib/store";
 import { AudioPlayer } from "./AudioPlayer";
 import { motion } from "framer-motion";
 
@@ -14,7 +15,7 @@ const links = [
 ];
 
 export function Navigation() {
-  const pathname = usePathname();
+  const { activeSection } = useTourState();
 
   return (
     <motion.nav 
@@ -32,30 +33,31 @@ export function Navigation() {
 
       <div className="hidden md:flex items-center gap-12 lg:gap-16">
         <ul className="flex items-center gap-8 lg:gap-12">
-          {links.map((link) => {
-            const isActive = pathname === link.path;
+          {["Home", "Athletes", "Services", "About", "Contact"].map((link) => {
+            const id = link.toLowerCase();
+            const isActive = activeSection === (id === "home" ? "/" : "/" + id);
+            
             return (
-              <li key={link.path} className="relative group">
-                <Link
-                  href={link.path}
+              <li key={link}>
+                <a 
+                  href={`#${id}`}
                   className={`font-bebas text-[11px] tracking-[0.4em] uppercase transition-all duration-500 block py-2 ${
                     isActive ? "text-accent-blue font-bold" : "text-foreground/50 hover:text-accent-blue"
                   }`}
                 >
-                  {link.name}
-                </Link>
-                {/* Gold Underline */}
-                <motion.div 
-                  initial={false}
-                  animate={{ 
-                    width: isActive ? "100%" : "0%",
-                    opacity: isActive ? 1 : 0
-                  }}
-                  className="absolute bottom-0 left-0 h-[1.5px] bg-accent-gold"
-                  transition={{ duration: 0.5, ease: "easeInOut" }}
-                />
-                {/* Hover Underline */}
-                <div className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-accent-gold group-hover:w-full transition-all duration-500 opacity-50" />
+                  <span className="relative">
+                    {link}
+                    {isActive && (
+                      <motion.div 
+                        layoutId="nav-underline"
+                        className="absolute -bottom-1 left-0 right-0 h-[1px] bg-accent-gold"
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: 1 }}
+                        transition={{ duration: 0.5 }}
+                      />
+                    )}
+                  </span>
+                </a>
               </li>
             );
           })}

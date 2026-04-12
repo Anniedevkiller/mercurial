@@ -21,12 +21,11 @@ const ROOMS: Record<string, { pos: [number, number, number], lookAt: [number, nu
   "/contact": { pos: [60, 1.5, -8], lookAt: [60, 1.5, -25] }
 };
 
-function CameraRig({ started }: { started: boolean }) {
-  const pathname = usePathname();
-  const currentRoom = ROOMS[pathname] || ROOMS["/"];
+function CameraRig({ started, activeSection }: { started: boolean, activeSection: string }) {
+  const currentRoom = ROOMS[activeSection] || ROOMS["/"];
 
   useFrame((state) => {
-    if (!started && pathname === "/") {
+    if (!started && activeSection === "/") {
       const targetZ = 4.5;
       state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, targetZ, 0.005);
       state.camera.lookAt(0, 1.5, 0);
@@ -35,11 +34,11 @@ function CameraRig({ started }: { started: boolean }) {
       const lookTarget = new THREE.Vector3(...currentRoom.lookAt);
 
       // When tour starts on Home page, move camera INTO the elevator
-      const finalPos = (pathname === "/" && started) ? new THREE.Vector3(0, 1.5, -3) : posTarget;
-      const finalLook = (pathname === "/" && started) ? new THREE.Vector3(0, 1.5, -15) : lookTarget;
+      const finalPos = (activeSection === "/" && started) ? new THREE.Vector3(0, 1.5, -3) : posTarget;
+      const finalLook = (activeSection === "/" && started) ? new THREE.Vector3(0, 1.5, -15) : lookTarget;
 
       // During the very initial transition from Home to /athletes, we want a specific speed
-      const lerpSpeed = (pathname === "/" && started) ? 0.005 : 0.03;
+      const lerpSpeed = (activeSection === "/" && started) ? 0.005 : 0.03;
       
       state.camera.position.lerp(finalPos, lerpSpeed);
       
@@ -105,7 +104,7 @@ const MemoServicesScene = React.memo(ServicesScene);
 const MemoAboutScene = React.memo(AboutScene);
 
 export default function GlobalCanvas() {
-  const started = useTourState();
+  const { started, activeSection } = useTourState();
   
   return (
     <div className="fixed inset-0 z-[-1] pointer-events-none">
@@ -115,7 +114,7 @@ export default function GlobalCanvas() {
         dpr={[1, 2]}
       >
         <Suspense fallback={null}>
-          <CameraRig started={started} />
+          <CameraRig started={started} activeSection={activeSection} />
           <ElevatorScene started={started} />
           
           <group position={[0, -0.5, -25]}>

@@ -42,7 +42,7 @@
 
 @layer utilities {
   .glass-nav {
-    @apply sticky top-0 bg-background/60 backdrop-blur-xl border-b border-white/20 z-[100];
+    @apply fixed top-0 left-0 w-full bg-background/60 backdrop-blur-xl border-b border-white/20 z-[100];
   }
 
   .btn-premium {
@@ -56,6 +56,35 @@
     @apply bg-background border border-accent-gold/20 rounded-2xl overflow-hidden
            transition-all duration-700 hover:shadow-[0_30px_60px_rgba(0,0,0,0.05)]
            hover:border-accent-gold hover:-translate-y-2;
+  }
+
+  .snap-container {
+    height: 100vh;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .snap-section {
+    height: 100vh;
+    width: 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   }
 
   .text-shadow-lux {
