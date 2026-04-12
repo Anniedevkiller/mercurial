@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Instagram, Mail, ArrowUpRight } from "lucide-react";
+import { Camera, Mail, ArrowUpRight } from "lucide-react";
 
 export function Footer() {
   return (
@@ -17,7 +17,7 @@ export function Footer() {
               &quot;Where champions become masterpieces. Curating the legacy of sports elite.&quot;
             </p>
             <div className="flex items-center gap-6 text-accent-blue">
-              <a href="#" className="hover:text-accent-gold transition-colors duration-500"><Instagram size={20} /></a>
+              <a href="#" className="hover:text-accent-gold transition-colors duration-500"><Camera size={20} /></a>
               <a href="mailto:info@mercurialsports.com" className="hover:text-accent-gold transition-colors duration-500"><Mail size={20} /></a>
             </div>
           </div>

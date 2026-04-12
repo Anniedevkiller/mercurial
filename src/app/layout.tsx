@@ -45,7 +45,7 @@ export default function RootLayout({
       lang="en"
       className={`${playfair.variable} ${inter.variable} ${bebas.variable} antialiased`}
     >
-      <body className="font-inter bg-background text-foreground antialiased min-h-screen">
+      <body className="font-inter text-foreground antialiased min-h-screen">
         <GlobalCanvas />
         <Navigation />
         <main>

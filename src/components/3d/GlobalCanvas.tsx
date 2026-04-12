@@ -6,6 +6,8 @@ import { Environment, Preload } from "@react-three/drei";
 import * as THREE from "three";
 import { usePathname } from "next/navigation";
 import { useTourState } from "@/lib/store";
+import dynamic from "next/dynamic";
+
 import ElevatorScene from "./ElevatorScene";
 import GalleryScene from "./GalleryScene";
 import ServicesScene from "./ServicesScene";
@@ -122,7 +124,6 @@ export default function GlobalCanvas() {
           <Environment preset="apartment" />
           <ambientLight intensity={0.4} />
           <directionalLight position={[5, 10, 5]} intensity={1.2} color="#F8F4EC" castShadow />
-          <Preload all />
         </Suspense>
       </Canvas>
     </div>

@@ -12,10 +12,14 @@ export function AudioPlayer() {
   useEffect(() => {
     const audio = audioRef.current;
     if (audio && started) {
-      audio.volume = 0.15;
-      audio.play().then(() => setIsPlaying(true)).catch((e) => {
-        console.log("Autoplay prevented:", e);
-      });
+      // Delay play slightly for smoother transition after "Enter the Gallery"
+      const timeout = setTimeout(() => {
+        audio.volume = 0.15;
+        audio.play().then(() => setIsPlaying(true)).catch((e) => {
+          console.log("Autoplay prevented:", e);
+        });
+      }, 500);
+      return () => clearTimeout(timeout);
     }
   }, [started]);
 
@@ -36,6 +40,8 @@ export function AudioPlayer() {
         ref={audioRef} 
         src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" 
         loop 
+        preload="none"
+        muted={!started}
       />
       <div className="flex flex-col text-right">
         <span className="font-bebas text-[9px] tracking-[0.4em] text-accent-gold uppercase leading-tight">
@@ -49,7 +55,7 @@ export function AudioPlayer() {
         onClick={toggle}
         className={`p-3 rounded-full border transition-all duration-700 ${
           isPlaying 
-            ? "bg-accent-blue/5 border-accent-gold/40 text-accent-gold shadow-[0_0_20px_rgba(197,160,89,0.2)]" 
+            ? "bg-accent-blue/5 border-accent-gold/40 text-accent-gold shadow-[0_0_20px_rgba(197,160,89,0.25)]" 
             : "border-foreground/10 text-foreground/30 hover:border-accent-gold/40 hover:text-accent-gold"
         }`}
         aria-label={isPlaying ? "Mute" : "Unmute"}
