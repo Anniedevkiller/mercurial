@@ -1,32 +1,33 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import HomeScene from "@/components/3d/HomeScene";
-import { AthletesSection } from "@/components/sections/AthletesSection";
-import { ServicesSection } from "@/components/sections/ServicesSection";
-import { AboutSection } from "@/components/sections/AboutSection";
-import { ContactSection } from "@/components/sections/ContactSection";
+import HomeHero from "@/components/3d/HomeScene";
+import { AthletesSection as Athletes } from "@/components/sections/AthletesSection";
+import { ServicesSection as Services } from "@/components/sections/ServicesSection";
+import { AboutSection as About } from "@/components/sections/AboutSection";
+import { ContactSection as Contact } from "@/components/sections/ContactSection";
+
+import { useEffect } from "react";
 import { tourStore } from "@/lib/store";
 
-const SECTIONS = [
-  { id: "home", path: "/", component: HomeScene },
-  { id: "athletes", path: "/athletes", component: AthletesSection },
-  { id: "services", path: "/services", component: ServicesSection },
-  { id: "about", path: "/about", component: AboutSection },
-  { id: "contact", path: "/contact", component: ContactSection },
-];
-
 export default function Home() {
-  const containerRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const section = SECTIONS.find((s) => s.id === entry.target.id);
-            if (section) {
-              tourStore.setActiveSection(section.path);
+            const sectionMap: Record<string, string> = {
+              "home": "/",
+              "athletes": "/athletes",
+              "services": "/services",
+              "about": "/about",
+              "contact": "/contact"
+            };
+            const path = sectionMap[entry.target.id];
+            if (path) {
+              tourStore.setActiveSection(path);
+              if (path !== "/") {
+                tourStore.setStarted(true);
+              }
             }
           }
         });
@@ -34,19 +35,33 @@ export default function Home() {
       { threshold: 0.5 }
     );
 
-    const sections = document.querySelectorAll(".snap-section");
+    const sections = document.querySelectorAll("section");
     sections.forEach((section) => observer.observe(section));
 
     return () => observer.disconnect();
   }, []);
 
   return (
-    <div ref={containerRef} className="snap-container">
-      {SECTIONS.map((Section) => (
-        <section key={Section.id} id={Section.id} className="snap-section">
-          <Section.component />
-        </section>
-      ))}
-    </div>
+    <main className="snap-container w-full">
+      <section id="home" className="snap-section">
+        <HomeHero />
+      </section>
+
+      <section id="athletes" className="snap-section">
+        <Athletes />
+      </section>
+
+      <section id="services" className="snap-section">
+        <Services />
+      </section>
+
+      <section id="about" className="snap-section">
+        <About />
+      </section>
+
+      <section id="contact" className="snap-section">
+        <Contact />
+      </section>
+    </main>
   );
 }

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 export function AthletesSection() {
   return (
-    <div className="section-padding h-full w-full flex items-center relative z-10 pointer-events-none">
+    <div className="w-full px-6 md:px-12 lg:px-24 relative z-10 pointer-events-none">
       <motion.div 
         initial={{ opacity: 0, x: -30 }}
         whileInView={{ opacity: 1, x: 0 }}
@@ -29,7 +29,7 @@ export function AthletesSection() {
         whileInView={{ opacity: 1 }}
         viewport={{ once: false, amount: 0.5 }}
         transition={{ delay: 0.5, duration: 2 }}
-        className="fixed bottom-12 left-1/2 -translate-x-1/2 text-center pointer-events-none"
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 text-center pointer-events-none"
       >
         <p className="font-bebas text-[10px] uppercase tracking-[0.6em] text-accent-gold/40">
           Illuminate portraits to reveal their legacy

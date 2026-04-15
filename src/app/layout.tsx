@@ -3,7 +3,8 @@ import { Playfair_Display, Inter, Bebas_Neue } from "next/font/google";
 import "./globals.css";
 import { Navigation } from "@/components/ui/Navigation";
 import { Footer } from "@/components/ui/Footer";
-import GlobalCanvas from "@/components/3d/GlobalCanvas";
+import dynamic from "next/dynamic";
+const GlobalCanvas = dynamic(() => import("@/components/3d/GlobalCanvas"), { ssr: false });
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",

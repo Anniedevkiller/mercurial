@@ -9,22 +9,29 @@ import { useTourState } from "@/lib/store";
 import dynamic from "next/dynamic";
 
 import ElevatorScene from "./ElevatorScene";
-import GalleryScene from "./GalleryScene";
-import ServicesScene from "./ServicesScene";
-import AboutScene from "./AboutScene";
+const GalleryScene = React.lazy(() => import("./GalleryScene"));
+const ServicesScene = React.lazy(() => import("./ServicesScene"));
+const AboutScene = React.lazy(() => import("./AboutScene"));
 
 const ROOMS: Record<string, { pos: [number, number, number], lookAt: [number, number, number] }> = {
   "/": { pos: [0, 1.5, 6], lookAt: [0, 1.5, 0] },
   "/athletes": { pos: [0, 1.5, -8], lookAt: [0, 1.5, -25] },
-  "/services": { pos: [20, 1.5, -8], lookAt: [20, 1.5, -25] },
-  "/about": { pos: [40, 1.5, -8], lookAt: [40, 1.5, -25] },
-  "/contact": { pos: [60, 1.5, -8], lookAt: [60, 1.5, -25] }
+  "/services": { pos: [120, 1.5, -8], lookAt: [120, 1.5, -25] },
+  "/about": { pos: [240, 1.5, -8], lookAt: [240, 1.5, -25] },
+  "/contact": { pos: [360, 1.5, -8], lookAt: [360, 1.5, -25] }
 };
 
 function CameraRig({ started, activeSection }: { started: boolean, activeSection: string }) {
   const currentRoom = ROOMS[activeSection] || ROOMS["/"];
+  const { viewport } = useThree();
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
+    // Dynamic Responsive FOV based on screen width/aspect
+    const aspect = viewport.width / viewport.height;
+    // Base FOV is 45 for desktop. Tablet (aspect ~1) gets 60. Phone (aspect ~0.5) gets 75.
+    const targetFov = aspect < 0.8 ? 75 : (aspect < 1.2 ? 60 : 45);
+    state.camera.fov = THREE.MathUtils.lerp(state.camera.fov, targetFov, delta * 2);
+    state.camera.updateProjectionMatrix();
     if (!started && activeSection === "/") {
       const targetZ = 4.5;
       state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, targetZ, 0.005);
@@ -37,8 +44,8 @@ function CameraRig({ started, activeSection }: { started: boolean, activeSection
       const finalPos = (activeSection === "/" && started) ? new THREE.Vector3(0, 1.5, -3) : posTarget;
       const finalLook = (activeSection === "/" && started) ? new THREE.Vector3(0, 1.5, -15) : lookTarget;
 
-      // During the very initial transition from Home to /athletes, we want a specific speed
-      const lerpSpeed = (activeSection === "/" && started) ? 0.005 : 0.03;
+      // During the very initial transition from Home to /athletes, we want a punchy fast speed
+      const lerpSpeed = (activeSection === "/" && started) ? 0.06 : 0.04;
       
       state.camera.position.lerp(finalPos, lerpSpeed);
       
@@ -99,15 +106,13 @@ function CursorSpotlight() {
   );
 }
 
-const MemoGalleryScene = React.memo(GalleryScene);
-const MemoServicesScene = React.memo(ServicesScene);
-const MemoAboutScene = React.memo(AboutScene);
+// Dynamic Imports wrapped in React.lazy above no longer need React.memo wrapping manually since lazy handles chunks
 
 export default function GlobalCanvas() {
   const { started, activeSection } = useTourState();
   
   return (
-    <div className="fixed inset-0 z-[-1] pointer-events-none">
+    <div className={`fixed inset-0 z-[-1] pointer-events-none transition-opacity duration-[1.5s] ease-in-out ${started ? "opacity-100" : "opacity-0"}`}>
       <Canvas
         camera={{ position: [0, 1.5, 6], fov: 45 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
@@ -117,19 +122,27 @@ export default function GlobalCanvas() {
           <CameraRig started={started} activeSection={activeSection} />
           <ElevatorScene started={started} />
           
-          <group position={[0, -0.5, -25]}>
-            <MemoGalleryScene />
-          </group>
-          <group position={[20, -0.5, -25]}>
-            <MemoServicesScene />
-          </group>
-          <group position={[40, -0.5, -25]}>
-            <MemoAboutScene />
-          </group>
+          <Suspense fallback={null}>
+            <group position={[0, -0.5, -25]}>
+              <GalleryScene />
+            </group>
+          </Suspense>
+          <Suspense fallback={null}>
+            <group position={[120, -0.5, -25]}>
+              <ServicesScene />
+            </group>
+          </Suspense>
+          <Suspense fallback={null}>
+            <group position={[240, -0.5, -25]}>
+              <AboutScene />
+            </group>
+          </Suspense>
   
           <CursorSpotlight />
   
-          <Environment preset="apartment" />
+          <Suspense fallback={null}>
+            <Environment preset="apartment" resolution={256} />
+          </Suspense>
           <ambientLight intensity={0.4} />
           <directionalLight position={[5, 10, 5]} intensity={1.2} color="#F8F4EC" castShadow />
         </Suspense>

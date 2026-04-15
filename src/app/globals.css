@@ -98,7 +98,7 @@
   }
 
   .section-padding {
-    @apply py-32 md:py-48 lg:py-64 px-8 md:px-16 lg:px-32;
+    @apply px-8 md:px-16 lg:px-32;
   }
 
   .royal-blue-wall {

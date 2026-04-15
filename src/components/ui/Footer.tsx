@@ -5,7 +5,7 @@ import { Camera, Mail, ArrowUpRight } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="bg-background border-t border-accent-gold/20 pt-24 pb-12 px-6 md:px-12 lg:px-24">
+    <footer className="w-full px-6 md:px-12 lg:px-24">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-16 md:gap-8 mb-24">
           {/* Brand Info */}
@@ -28,10 +28,10 @@ export function Footer() {
             <ul className="space-y-4">
               {["Home", "Athletes", "Services", "About", "Contact"].map((link) => (
                 <li key={link}>
-                  <Link href={`/${link.toLowerCase() === "home" ? "" : link.toLowerCase()}`} className="group flex items-center gap-2 font-inter text-sm text-foreground/50 hover:text-accent-blue transition-all duration-300">
+                  <a href={`#${link.toLowerCase() === "home" ? "home" : link.toLowerCase()}`} className="group flex items-center gap-2 font-inter text-sm text-foreground/50 hover:text-accent-blue transition-all duration-300">
                     <span className="uppercase tracking-widest">{link}</span>
                     <ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>

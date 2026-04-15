@@ -1,75 +1,17 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, Star, Shield, Info, ArrowUpRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import { tourStore } from "@/lib/store";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import dynamic from "next/dynamic";
-
-const PreviewCards = dynamic(() => Promise.resolve(({ cards }: { cards: any[] }) => (
-  <section className="section-padding bg-white/30 backdrop-blur-sm border-t border-accent-gold/10">
-    <div className="max-w-7xl mx-auto">
-      <motion.div 
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="text-center mb-24 space-y-4"
-      >
-        <h4 className="font-bebas text-xs tracking-[0.5em] text-accent-gold uppercase">Explore the Foundation</h4>
-        <h2 className="text-accent-blue">The Imperial Collection</h2>
-      </motion.div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-        {cards.map((card, idx) => (
-          <motion.div
-            key={card.id}
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: idx * 0.2 }}
-            className="card-gallery group p-12 space-y-8 flex flex-col items-center text-center cursor-pointer"
-          >
-            <div className="w-16 h-16 rounded-full bg-accent-blue/5 border border-accent-gold/20 flex items-center justify-center text-accent-gold transition-colors group-hover:bg-accent-blue group-hover:text-white group-hover:border-transparent duration-500">
-              <card.icon size={24} />
-            </div>
-            <div className="space-y-4">
-              <h3 className="text-xl md:text-2xl text-accent-blue">{card.title}</h3>
-              <div className="w-12 h-[1px] bg-accent-gold mx-auto group-hover:w-20 transition-all duration-500" />
-              <p className="font-inter text-sm tracking-wide">{card.desc}</p>
-            </div>
-            <div className="pt-4 flex items-center gap-2 text-accent-gold font-bebas text-[10px] tracking-[0.3em] uppercase opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 text-bold underline">
-              Discover Now <ArrowRight size={14} />
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  </section>
-)), { ssr: false });
-
-const previewCards = [
-  { id: "athletes", title: "Masterpiece Athletes", icon: Star, desc: "Curating elite competitive legacies." },
-  { id: "services", title: "Premium Services", icon: Shield, desc: "Bespoke strategy for world-class talent." },
-  { id: "about", title: "The Imperial Way", icon: Info, desc: "Our philosophy of excellence." },
-];
 
 export default function HomeScene() {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const spotlightRef = useRef<HTMLDivElement>(null);
-  const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"]
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
       if (spotlightRef.current) {
         gsap.to(spotlightRef.current, {
           x: e.clientX - 400,
@@ -84,124 +26,98 @@ export default function HomeScene() {
   }, []);
 
   return (
-    <div className="relative w-full">
+    <div className="w-full px-6 md:px-12 lg:px-24 relative z-10 overflow-hidden">
       {/* Background Ambience */}
       <div 
         ref={spotlightRef}
-        className="fixed top-0 left-0 w-[800px] h-[800px] bg-accent-gold/5 rounded-full blur-[150px] pointer-events-none z-0"
+        className="absolute top-0 left-0 w-[800px] h-[800px] bg-accent-gold/5 rounded-full blur-[150px] pointer-events-none z-0"
       />
 
-      {/* Hero Section */}
-      <section ref={heroRef} className="section-padding min-h-screen flex items-center relative z-10 overflow-hidden">
-        <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-5 gap-20 items-center">
-          
-          {/* Left Column: Brand & Editorial (3/5) */}
-          <motion.div 
-            style={{ y, opacity }}
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
-            className="lg:col-span-3 space-y-16"
+      <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-20 items-center">
+        
+        {/* Left Column: Brand & Editorial (3/5) */}
+        <motion.div 
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: false, amount: 0.5 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="lg:col-span-3 space-y-12"
+        >
+          <div className="space-y-6">
+            <motion.span 
+              initial={{ opacity: 0, letterSpacing: "1em" }}
+              animate={{ opacity: 1, letterSpacing: "0.6em" }}
+              transition={{ duration: 1.5, delay: 0.2 }}
+              className="font-bebas text-[11px] text-accent-gold uppercase block tracking-[0.6em] font-bold"
+            >
+              The Art of Performance
+            </motion.span>
+            <h1 className="text-foreground tracking-tight leading-[0.9] uppercase flex flex-col">
+              <span className="block">Mercurial</span>
+              <span className="text-accent-blue italic opacity-95">Sports Imperial</span>
+            </h1>
+          </div>
+
+          <motion.p 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: false, amount: 0.5 }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="text-lg lg:text-2xl font-playfair italic max-w-xl leading-relaxed border-l-[1px] border-accent-gold/30 pl-10"
           >
-            <div className="space-y-6">
-              <motion.span 
-                initial={{ opacity: 0, letterSpacing: "1em" }}
-                animate={{ opacity: 1, letterSpacing: "0.6em" }}
-                transition={{ duration: 1.5, delay: 0.2 }}
-                className="font-bebas text-[11px] text-accent-gold uppercase block tracking-[0.6em]"
-              >
-                The Art of Performance
-              </motion.span>
-              <h1 className="text-foreground tracking-tight leading-[0.9] uppercase flex flex-col">
-                <span className="block">Mercurial</span>
-                <span className="text-accent-blue italic opacity-95">Sports Imperial</span>
-              </h1>
-            </div>
+            &quot;Where champions become masterpieces. Our agency transcends management—we curate the legacy of the elite.&quot;
+          </motion.p>
 
-            <motion.p 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1, delay: 0.8 }}
-              className="text-xl lg:text-3xl font-playfair italic max-w-xl leading-relaxed border-l-[1px] border-accent-gold/30 pl-10"
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.5 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+          >
+            <button 
+              onClick={() => {
+                tourStore.setStarted(true);
+              }}
+              className="group relative inline-flex items-center gap-6 px-10 py-5 bg-[#FBF9F4] border border-accent-gold rounded-full text-accent-blue font-playfair uppercase tracking-[0.2em] text-xs font-bold transition-all duration-700 hover:shadow-[0_20px_40px_rgba(197,160,89,0.25)] hover:-translate-y-2 overflow-hidden"
             >
-              &quot;Where champions become masterpieces. Our agency transcends management—we curate the legacy of the world&apos;s sporting elite.&quot;
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.2 }}
-            >
-              <button 
-                onClick={() => {
-                  tourStore.setStarted(true);
-                  document.getElementById('athletes')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="group relative inline-flex items-center gap-6 px-10 py-5 bg-[#FBF9F4] border border-accent-gold rounded-full text-accent-blue font-playfair uppercase tracking-[0.2em] text-xs font-bold transition-all duration-700 hover:shadow-[0_20px_40px_rgba(197,160,89,0.25)] hover:-translate-y-2 overflow-hidden"
-              >
-                <span className="relative z-10 flex items-center gap-3">
-                  Enter the Gallery
-                  <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-                </span>
-                <div className="absolute inset-0 bg-accent-gold/5 translate-y-full group-hover:translate-y-0 transition-transform duration-700" />
-              </button>
-            </motion.div>
+              <span className="relative z-10 flex items-center gap-3">
+                Enter the Gallery
+                <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+              </span>
+              <div className="absolute inset-0 bg-accent-gold/5 translate-y-full group-hover:translate-y-0 transition-transform duration-700" />
+            </button>
           </motion.div>
+        </motion.div>
 
-          {/* Right Column: Luxury Visual Panel (2/5) */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
-            className="lg:col-span-2 relative hidden lg:flex justify-center"
-          >
-            <div className="relative w-full aspect-[4/5] max-w-[450px]">
-              {/* Outer Wall Texture */}
-              <div className="absolute inset-0 royal-blue-wall rounded-[2rem] shadow-[0_40px_80px_rgba(0,0,0,0.15)] overflow-hidden">
-                {/* Gold Decorative Lines */}
-                <div className="gold-decor top-8 left-8 right-8 bottom-8 border-accent-gold/20" />
-                <div className="gold-decor top-4 left-4 right-4 bottom-4 border-accent-gold/10" />
-                
-                {/* Framed Portrait */}
-                <div className="absolute inset-16 flex items-center justify-center">
-                  <div className="relative w-full h-full border-[10px] border-[#FBF9F4] shadow-2xl overflow-hidden group">
-                    <Image 
-                      src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1200&auto=format&fit=crop" 
-                      alt="Luxe Sports Portrait"
-                      fill
-                      className="object-cover grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-110"
-                      priority
-                    />
-                    <div className="absolute inset-0 bg-accent-blue/40 mix-blend-overlay group-hover:opacity-0 transition-opacity duration-1000" />
-                    
-                    {/* Spotlight Glow */}
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-white/20 blur-3xl rounded-full" />
-                  </div>
-                </div>
-
-                {/* Piano/Gallery Object Silhouette (Subtle) */}
-                <div className="absolute bottom-6 right-6 opacity-10 pointer-events-none">
-                   <svg width="60" height="60" viewBox="0 0 24 24" fill="currentColor" className="text-accent-gold">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
-                   </svg>
+        {/* Right Column: Luxury Visual Panel (2/5) */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.98 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: false, amount: 0.5 }}
+          transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
+          className="lg:col-span-2 relative hidden lg:flex justify-center"
+        >
+          <div className="relative w-full aspect-[4/5] max-w-[400px]">
+            <div className="absolute inset-0 royal-blue-wall rounded-[2rem] shadow-[0_40px_80px_rgba(0,0,0,0.15)] overflow-hidden">
+              <div className="gold-decor top-8 left-8 right-8 bottom-8 border-accent-gold/20" />
+              <div className="gold-decor top-4 left-4 right-4 bottom-4 border-accent-gold/10" />
+              
+              <div className="absolute inset-16 flex items-center justify-center">
+                <div className="relative w-full h-full border-[10px] border-[#FBF9F4] shadow-2xl overflow-hidden group">
+                  <Image 
+                    src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1200&auto=format&fit=crop" 
+                    alt="Luxe Sports Portrait"
+                    fill
+                    className="object-cover grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-110"
+                    priority
+                  />
+                  <div className="absolute inset-0 bg-accent-blue/40 mix-blend-overlay group-hover:opacity-0 transition-opacity duration-1000" />
                 </div>
               </div>
-
-              {/* Decorative Floating Elements */}
-              <motion.div 
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -top-10 -right-10 w-24 h-24 border border-accent-gold/20 rounded-full flex items-center justify-center backdrop-blur-sm"
-              >
-                <Star className="text-accent-gold w-6 h-6 animate-pulse" />
-              </motion.div>
             </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Preview Section - Scroll Reveal */}
-      <PreviewCards cards={previewCards} />
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 }

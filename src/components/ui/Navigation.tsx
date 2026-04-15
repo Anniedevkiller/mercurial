@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { useTourState } from "@/lib/store";
 import { AudioPlayer } from "./AudioPlayer";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const links = [
   { name: "Home", path: "/" },
@@ -16,6 +17,7 @@ const links = [
 
 export function Navigation() {
   const { activeSection } = useTourState();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <motion.nav 
@@ -68,11 +70,46 @@ export function Navigation() {
         <AudioPlayer />
       </div>
 
-      {/* Mobile Menu Toggle (Simplified for Premium feel) */}
-      <button className="md:hidden text-accent-blue p-2">
+      {/* Mobile Menu Toggle */}
+      <button 
+        onClick={() => setMobileMenuOpen(true)}
+        className="md:hidden text-accent-blue p-2 relative z-[110]"
+      >
         <div className="w-6 h-[1.5px] bg-current mb-1.5" />
         <div className="w-6 h-[1.5px] bg-current" />
       </button>
+
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-0 bg-[#FBF9F4] z-[120] flex flex-col items-center justify-center space-y-12"
+          >
+            <button 
+              onClick={() => setMobileMenuOpen(false)}
+              className="absolute top-8 right-8 text-accent-blue p-2"
+            >
+              <div className="w-6 h-[1.5px] bg-current rotate-45 translate-y-[1px]" />
+              <div className="w-6 h-[1.5px] bg-current -rotate-45 -translate-y-[1px]" />
+            </button>
+            {["Home", "Athletes", "Services", "About", "Contact"].map((link) => {
+              const id = link.toLowerCase();
+              return (
+                <a 
+                  key={link}
+                  href={`#${id}`}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="font-playfair text-3xl uppercase tracking-widest text-accent-blue font-black hover:text-accent-gold transition-colors"
+                >
+                  {link}
+                </a>
+              );
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.nav>
   );
 }
