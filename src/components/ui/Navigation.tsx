@@ -68,6 +68,10 @@ export function Navigation() {
         <div className="h-4 w-[1px] bg-accent-gold/30" />
         
         <AudioPlayer />
+
+        <a href="#contact" className="hidden lg:block ml-4 font-bebas tracking-widest text-sm bg-accent-blue text-white px-6 py-2 hover:bg-accent-gold transition-colors duration-300">
+          GET REPRESENTED
+        </a>
       </div>
 
       {/* Mobile Menu Toggle */}
