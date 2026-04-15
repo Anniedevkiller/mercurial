@@ -3,9 +3,7 @@ import { Playfair_Display, Inter, Bebas_Neue } from "next/font/google";
 import "./globals.css";
 import { Navigation } from "@/components/ui/Navigation";
 import { Footer } from "@/components/ui/Footer";
-import dynamic from "next/dynamic";
-const GlobalCanvas = dynamic(() => import("@/components/3d/GlobalCanvas"), { ssr: false });
-
+import GlobalCanvasWrapper from "@/components/3d/GlobalCanvasWrapper";
 const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
@@ -49,7 +47,7 @@ export default function RootLayout({
       className={`${playfair.variable} ${inter.variable} ${bebas.variable} antialiased`}
     >
       <body className="font-inter text-foreground antialiased h-screen overflow-hidden">
-        <GlobalCanvas />
+        <GlobalCanvasWrapper />
         <AutoTourController />
         <Navigation />
         <main className="h-full w-full">
