@@ -30,8 +30,9 @@ function CameraRig({ started, activeSection }: { started: boolean, activeSection
     const aspect = viewport.width / viewport.height;
     // Base FOV is 45 for desktop. Tablet (aspect ~1) gets 60. Phone (aspect ~0.5) gets 75.
     const targetFov = aspect < 0.8 ? 75 : (aspect < 1.2 ? 60 : 45);
-    state.camera.fov = THREE.MathUtils.lerp(state.camera.fov, targetFov, delta * 2);
-    state.camera.updateProjectionMatrix();
+    const camera = state.camera as THREE.PerspectiveCamera;
+    camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, delta * 2);
+    camera.updateProjectionMatrix();
     if (!started && activeSection === "/") {
       const targetZ = 4.5;
       state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, targetZ, 0.005);
